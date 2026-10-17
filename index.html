@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>泉森 · 半亩方塘</title>
+<meta name="description" content="写字、拍照片，偶尔读旧书。">
+<style>
+  :root{
+    --ink:#1f1f1f; --ink-2:#555; --ink-3:#8a8a8a;
+    --paper:#fbfaf7; --line:#e3e0d8; --seal:#a63a2c;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Songti SC","Noto Serif CJK SC","Source Han Serif SC",
+                "STSong",Georgia,"Times New Roman",serif;
+    line-height:1.95; letter-spacing:.01em;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:640px;margin:0 auto;padding:72px 24px 96px}
+  header{border-bottom:1px solid var(--line);padding-bottom:28px;margin-bottom:44px}
+  .name{font-size:30px;letter-spacing:.22em;margin:0 0 10px;font-weight:500}
+  .name small{display:block;font-size:13px;letter-spacing:.34em;color:var(--ink-3);margin-top:10px;font-weight:400}
+  .lede{margin:0;color:var(--ink-2);font-size:16px}
+  section{margin:0 0 40px}
+  h2{
+    font-size:13px;letter-spacing:.3em;color:var(--ink-3);
+    font-weight:500;margin:0 0 16px;text-transform:uppercase;
+  }
+  p{margin:0 0 14px}
+  ul{list-style:none;margin:0;padding:0}
+  li{border-bottom:1px dotted var(--line)}
+  li:last-child{border-bottom:0}
+  li a{
+    display:flex;justify-content:space-between;align-items:baseline;
+    gap:16px;padding:13px 2px;text-decoration:none;color:var(--ink);
+    transition:color .18s ease, padding-left .18s ease;
+  }
+  li a:hover{color:var(--seal);padding-left:6px}
+  li a .t{font-size:16.5px}
+  li a .d{font-size:12.5px;color:var(--ink-3);white-space:nowrap}
+  .quote{
+    border-left:2px solid var(--line); padding:2px 0 2px 18px;
+    color:var(--ink-2); font-size:15.5px; margin:0 0 40px;
+  }
+  footer{
+    border-top:1px solid var(--line); padding-top:22px; margin-top:56px;
+    color:var(--ink-3); font-size:12.5px; display:flex;
+    justify-content:space-between; gap:16px; flex-wrap:wrap;
+  }
+  .seal{
+    display:inline-block; border:1px solid var(--seal); color:var(--seal);
+    font-size:11px; letter-spacing:.2em; padding:3px 7px; border-radius:2px;
+    vertical-align:middle; margin-left:10px;
+  }
+  @media (max-width:480px){
+    .wrap{padding:52px 20px 72px}
+    .name{font-size:26px}
+    li a{flex-direction:column;gap:2px;align-items:flex-start}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1 class="name">泉 森<span class="seal">半亩方塘</span>
+      <small>QUAN SEN</small>
+    </h1>
+    <p class="lede">写字，拍照片，偶尔读旧书。</p>
+  </header>
+
+  <p class="quote">半亩方塘一鉴开，天光云影共徘徊。<br>问渠那得清如许？为有源头活水来。</p>
+
+  <section>
+    <h2>写的</h2>
+    <ul>
+      <li><a href="#" data-todo="公众号链接"><span class="t">半亩方塘 · 重温百部名著</span><span class="d">读书记</span></a></li>
+      <li><a href="#" data-todo="文章归档链接"><span class="t">随笔与札记</span><span class="d">不定时</span></a></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>拍的</h2>
+    <ul>
+      <li><a href="#" data-todo="摄影集链接"><span class="t">光与影</span><span class="d">风景 · 人物</span></a></li>
+      <li><a href="#" data-todo="器材/配方文章链接"><span class="t">后期配方</span><span class="d">笔记</span></a></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>关于</h2>
+    <p>〔这里放两三句自我介绍 —— 待您给话。建议只说身份之外的事：爱读什么书、拍什么题材、为什么写字。〕</p>
+    <p>联系：〔待定〕</p>
+  </section>
+
+  <footer>
+    <span>© 2026 泉森</span>
+    <span>dqquan.com</span>
+  </footer>
+
+</div>
+</body>
+</html>
