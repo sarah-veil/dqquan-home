@@ -14,6 +14,11 @@ OUT = "/Users/apple/CodexProjects/dqquan_home/"
 SITE = "https://dqquan.com"
 
 tai = open(VAULT + "发布记录_台账.md", encoding="utf-8").read()
+
+# 只取「## 已发表清单」这一节（台账后面还有阅读数据表，混进来会变成假书目）
+m = re.search(r"##\s*已发表清单.*?(?=\n##\s|\Z)", tai, re.S)
+tai = m.group(0) if m else tai
+print("台账取「已发表清单」段：%d 字符" % len(tai))
 pai = open(VAULT + "书单排期_半亩方塘.md", encoding="utf-8").read()
 
 
