@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>泉森 · 半亩方塘</title>
+<style>
+  :root{
+    --bg:#f4f3ef;
+    --surface:#ffffff;
+    --ink:#22262a;
+    --ink-2:#5c6166;
+    --ink-3:#8d9196;
+    --line:#dcdad4;
+    --accent:#2f4a52;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Helvetica Neue","PingFang SC",sans-serif;
+    line-height:1.8;
+  }
+  img{display:block;max-width:100%}
+  a{color:inherit}
+  .serif{font-family:"Songti SC","Noto Serif CJK SC","STSong",serif}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 36px}
+
+  header{display:flex;justify-content:space-between;align-items:center;padding:26px 0}
+  .mark{font-size:14px;font-weight:600;letter-spacing:.26em}
+  nav a{font-size:12px;letter-spacing:.16em;margin-left:26px;text-decoration:none;color:var(--ink-2)}
+  nav a:hover{color:var(--accent)}
+
+  .hero{display:grid;grid-template-columns:.9fr 1.1fr;gap:52px;align-items:center;padding:46px 0 86px}
+  .hero h1{font-size:clamp(32px,4.4vw,54px);line-height:1.16;font-weight:600;letter-spacing:-.01em;margin:0 0 20px}
+  .hero p{font-size:15px;color:var(--ink-2);margin:0 0 26px;max-width:24em}
+  .hero .cta{display:inline-block;font-size:13px;letter-spacing:.12em;color:var(--bg);
+    background:var(--accent);padding:12px 22px;text-decoration:none}
+  .hero .cta:active{transform:translateY(1px)}
+  .hero img{aspect-ratio:5/4;object-fit:cover}
+
+  section{padding:64px 0;border-top:1px solid var(--line)}
+  h2{font-size:12px;letter-spacing:.3em;color:var(--ink-3);font-weight:600;margin:0 0 30px;text-transform:uppercase}
+
+  .feature{display:grid;grid-template-columns:1.3fr .7fr;gap:44px;align-items:end;margin-bottom:34px}
+  .feature img{aspect-ratio:16/9;object-fit:cover}
+  .feature h3{font-size:26px;font-weight:600;margin:0 0 10px;line-height:1.35}
+  .feature p{font-size:14px;color:var(--ink-2);margin:0 0 16px}
+  .feature a{font-size:13px;color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:2px}
+
+  .works{display:grid;grid-template-columns:repeat(2,1fr);gap:26px 40px}
+  .work{padding-top:16px;border-top:1px solid var(--line)}
+  .work span{font-size:12px;color:var(--ink-3);letter-spacing:.1em}
+  .work h3{font-size:18px;font-weight:600;margin:6px 0 6px;line-height:1.45}
+  .work p{font-size:13px;color:var(--ink-2);margin:0}
+
+  .gallery{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:150px;gap:14px}
+  .gallery figure{margin:0;overflow:hidden}
+  .gallery img{width:100%;height:100%;object-fit:cover;transition:transform .5s cubic-bezier(.16,1,.3,1)}
+  .gallery figure:hover img{transform:scale(1.03)}
+  .g1{grid-column:span 4;grid-row:span 2}
+  .g2{grid-column:span 2;grid-row:span 1}
+  .g3{grid-column:span 2;grid-row:span 1}
+  .g4{grid-column:span 3;grid-row:span 2}
+  .g5{grid-column:span 3;grid-row:span 2}
+
+  .about{display:grid;grid-template-columns:1fr 1fr;gap:60px}
+  .about p{font-size:15px;color:var(--ink-2);margin:0 0 14px;max-width:30em}
+  .about a{border-bottom:1px solid var(--line);text-decoration:none}
+
+  footer{border-top:1px solid var(--line);padding:28px 0 54px;display:flex;justify-content:space-between;
+    font-size:12px;color:var(--ink-3);letter-spacing:.08em}
+
+  @media (max-width:860px){
+    .wrap{padding:0 22px}
+    .hero{grid-template-columns:1fr;gap:30px;padding:34px 0 56px}
+    .feature{grid-template-columns:1fr;gap:20px}
+    .works{grid-template-columns:1fr}
+    .gallery{grid-template-columns:1fr 1fr;grid-auto-rows:140px}
+    .g1,.g4,.g5{grid-column:span 2;grid-row:span 2}
+    .g2,.g3{grid-column:span 1;grid-row:span 1}
+    .about{grid-template-columns:1fr;gap:24px}
+    nav a{margin-left:16px}
+    footer{flex-direction:column;gap:8px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="mark">泉森</div>
+    <nav><a href="#works">写的</a><a href="#shots">拍的</a><a href="#about">关于</a></nav>
+  </header>
+
+  <div class="hero">
+    <div>
+      <h1 class="serif">把读过的书<br>再读一遍</h1>
+      <p>一百部旧书，一百个夜晚。写下来，也拍下来。</p>
+      <a class="cta" href="#works">从最近一期开始</a>
+    </div>
+    <img src="https://picsum.photos/seed/quansen-library-window/1200/960" alt="图书馆的窗">
+  </div>
+
+  <section id="works">
+    <h2>写的</h2>
+    <div class="feature">
+      <img src="https://picsum.photos/seed/quansen-book-31/1200/675" alt="书与台灯">
+      <div>
+        <h3 class="serif">世界最简单的才能发现法</h3>
+        <p>才能不是练出来的，是不由自主就会做的事。第 31 期，日本，八木仁平。</p>
+        <a href="../audio/31.mp3">听这一期</a>
+      </div>
+    </div>
+    <div class="works">
+      <article class="work">
+        <span>第 30 期</span>
+        <h3 class="serif">过于喧嚣的孤独</h3>
+        <p>一个人在地下室里，和四十吨废纸生活了三十五年。</p>
+      </article>
+      <article class="work">
+        <span>第 29 期</span>
+        <h3 class="serif">菊次郎与佐纪</h3>
+        <p>母亲走了以后，他才开始认识她。</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="shots">
+    <h2>拍的</h2>
+    <div class="gallery">
+      <figure class="g1"><img src="https://picsum.photos/seed/quansen-morning-river/1200/700" alt="清晨的河"></figure>
+      <figure class="g2"><img src="https://picsum.photos/seed/quansen-tea-cup/600/450" alt="茶"></figure>
+      <figure class="g3"><img src="https://picsum.photos/seed/quansen-old-door/600/450" alt="旧门"></figure>
+      <figure class="g4"><img src="https://picsum.photos/seed/quansen-alley/900/700" alt="巷子"></figure>
+      <figure class="g5"><img src="https://picsum.photos/seed/quansen-hill-road/900/700" alt="山路"></figure>
+    </div>
+  </section>
+
+  <section id="about">
+    <h2>关于</h2>
+    <div class="about">
+      <p class="serif">泉森，写字的人，也拍一点照片。这里放重读旧书的记录，和一些不想发在别处的东西。</p>
+      <p>写信给我：<a href="mailto:quan@dqquan.com">quan@dqquan.com</a></p>
+    </div>
+  </section>
+
+  <footer>
+    <span>泉森 · 半亩方塘</span>
+    <span>dqquan.com</span>
+  </footer>
+</div>
+</body>
+</html>

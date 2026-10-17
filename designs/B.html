@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>泉森 · 半亩方塘</title>
+<style>
+  :root{
+    --ink:#121211;
+    --ink-2:#1b1a18;
+    --paper:#e8e3d9;
+    --paper-2:#a9a49a;
+    --paper-3:#8f8a80;
+    --line:#2e2c28;
+    --seal:#c0442f;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--ink);color:var(--paper);
+    font-family:"Songti SC","Noto Serif CJK SC","Source Han Serif SC","STSong",serif;
+    line-height:1.9;
+  }
+  img{display:block;max-width:100%}
+  a{color:inherit}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 36px}
+
+  header{display:flex;justify-content:space-between;align-items:center;
+    padding:30px 0;border-bottom:1px solid var(--line)}
+  .mark{font-size:16px;letter-spacing:.4em}
+  nav a{font-size:12px;letter-spacing:.24em;margin-left:28px;text-decoration:none;color:var(--paper-2)}
+  nav a:hover{color:var(--seal)}
+
+  .hero{padding:96px 0 104px;display:grid;grid-template-columns:1.25fr .75fr;gap:70px;align-items:center}
+  .hero h1{margin:0 0 26px;font-size:clamp(34px,5vw,64px);line-height:1.18;font-weight:400;letter-spacing:.04em}
+  .hero h1 em{font-style:normal;color:var(--seal)}
+  .hero p{margin:0;color:var(--paper-2);font-size:15px;max-width:28em}
+  .hero img{aspect-ratio:3/4;object-fit:cover;filter:grayscale(1) contrast(1.08)}
+
+  section{padding:72px 0;border-top:1px solid var(--line)}
+  section h2{font-size:12px;letter-spacing:.42em;color:var(--paper-3);font-weight:400;margin:0 0 34px}
+
+  .list{display:grid;gap:0}
+  .row{display:grid;grid-template-columns:120px 1fr auto;gap:26px;
+    padding:20px 0;border-bottom:1px solid var(--line);align-items:baseline}
+  .row:first-child{border-top:1px solid var(--line)}
+  .row .no{font-size:12px;color:var(--paper-3);letter-spacing:.14em}
+  .row h3{font-size:21px;font-weight:400;margin:0;line-height:1.5}
+  .row p{grid-column:2;margin:6px 0 0;color:var(--paper-2);font-size:13px}
+  .row a{font-size:12px;letter-spacing:.14em;color:var(--seal);text-decoration:none;white-space:nowrap}
+
+  .strip{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .strip figure{margin:0}
+  .strip img{width:100%;aspect-ratio:3/4;object-fit:cover;filter:grayscale(1)}
+  .strip figcaption{font-size:11px;color:var(--paper-3);margin-top:9px;letter-spacing:.06em}
+
+  .about{display:grid;grid-template-columns:1.2fr .8fr;gap:64px;align-items:end}
+  .about p{font-size:15px;color:var(--paper-2);margin:0 0 14px;max-width:30em}
+  .about a{border-bottom:1px solid var(--seal);text-decoration:none}
+  .sig{text-align:right}
+  .sig .seal{display:inline-flex;width:72px;height:72px;border:1px solid var(--seal);color:var(--seal);
+    align-items:center;justify-content:center;font-size:18px;letter-spacing:.14em;line-height:1.25}
+
+  footer{border-top:1px solid var(--line);padding:30px 0 60px;
+    display:flex;justify-content:space-between;font-size:11px;color:var(--paper-3);letter-spacing:.1em}
+
+  @media (max-width:820px){
+    .wrap{padding:0 22px}
+    .hero{grid-template-columns:1fr;gap:36px;padding:60px 0 68px}
+    .hero img{aspect-ratio:16/10}
+    .row{grid-template-columns:1fr;gap:6px}
+    .row p{grid-column:1}
+    .strip{grid-template-columns:1fr}
+    .about{grid-template-columns:1fr;gap:30px}
+    .sig{text-align:left}
+    nav a{margin-left:16px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="mark">泉森</div>
+    <nav><a href="#works">写的</a><a href="#shots">拍的</a><a href="#about">关于</a></nav>
+  </header>
+
+  <div class="hero">
+    <div>
+      <h1>旧书读第二遍，<br>才<em>认得</em>上面的人。</h1>
+      <p>一百部书，一间书房。写我读到的，拍我看见的。</p>
+    </div>
+    <img src="https://picsum.photos/seed/quansen-dark-desk/780/1040" alt="夜里的书桌">
+  </div>
+
+  <section id="works">
+    <h2>写的</h2>
+    <div class="list">
+      <div class="row">
+        <span class="no">第 31 期</span>
+        <h3>世界最简单的才能发现法</h3>
+        <a href="../audio/31.mp3">听这一期</a>
+        <p>才能不是练出来的，是不由自主就会做的事。</p>
+      </div>
+      <div class="row">
+        <span class="no">第 30 期</span>
+        <h3>过于喧嚣的孤独</h3>
+        <a href="../audio/30.mp3">听这一期</a>
+        <p>一个人在地下室里，和四十吨废纸生活了三十五年。</p>
+      </div>
+      <div class="row">
+        <span class="no">第 29 期</span>
+        <h3>菊次郎与佐纪</h3>
+        <a href="../audio/29.mp3">听这一期</a>
+        <p>母亲走了以后，他才开始认识她。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="shots">
+    <h2>拍的</h2>
+    <div class="strip">
+      <figure><img src="https://picsum.photos/seed/quansen-stone-wall/700/930" alt="石墙"><figcaption>墙上的水痕</figcaption></figure>
+      <figure><img src="https://picsum.photos/seed/quansen-night-street/700/930" alt="夜街"><figcaption>十一点的街</figcaption></figure>
+      <figure><img src="https://picsum.photos/seed/quansen-window-light/700/930" alt="窗灯"><figcaption>对面那户还没睡</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="about">
+      <div>
+        <p>泉森。白天做事，晚上读书写字。这里放重读旧书的记录，和一些不值得发在别处的东西。</p>
+        <p><a href="mailto:quan@dqquan.com">quan@dqquan.com</a></p>
+      </div>
+      <div class="sig"><span class="seal">泉森<br>手记</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>SEMI MUTA</span>
+    <span>dqquan.com</span>
+  </footer>
+</div>
+</body>
+</html>
