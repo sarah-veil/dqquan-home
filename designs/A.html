@@ -51,7 +51,16 @@
   .work .read{font-size:12px;letter-spacing:.1em;color:var(--seal);text-decoration:none;
     border-bottom:1px solid var(--seal);padding-bottom:1px;margin-top:auto;align-self:flex-start}
 
-  .shots{display:grid;grid-template-columns:1.4fr 1fr;grid-template-rows:auto auto;gap:22px}
+  .record-head{display:flex;justify-content:space-between;align-items:end;gap:36px;margin-bottom:34px}
+  .record-head h2{margin:0}
+  .record-head p{font-size:14px;color:var(--ink-2);margin:0;max-width:32em}
+  .country-feature{display:grid;grid-template-columns:.72fr 1.48fr;gap:46px;align-items:end}
+  .country-copy h3{font-size:28px;font-weight:500;line-height:1.35;margin:10px 0 14px}
+  .country-copy>p{font-size:14px;color:var(--ink-2);margin:0 0 22px;max-width:25em}
+  .country-meta{font-size:12px;letter-spacing:.12em;color:var(--ink-3)}
+  .archive-link{font-size:12px;letter-spacing:.1em;color:var(--seal);text-decoration:none;
+    border-bottom:1px solid var(--seal);padding-bottom:2px}
+  .shots{display:grid;grid-template-columns:1.4fr 1fr;grid-template-rows:auto auto;gap:20px}
   .shots figure{margin:0}
   .shots img{object-fit:cover;width:100%}
   .shots .big{grid-row:span 2}
@@ -73,8 +82,13 @@
     .hero{grid-template-columns:1fr;gap:34px;padding:52px 0 64px}
     .hero img{aspect-ratio:16/10}
     .works{grid-template-columns:1fr;gap:26px}
+    .record-head{display:block}
+    .record-head p{margin-top:12px}
+    .country-feature{grid-template-columns:1fr;gap:24px}
+    .country-copy h3{font-size:24px}
     .shots{grid-template-columns:1fr}
     .shots .big{grid-row:auto}
+    .shots .big img,.shots figure:not(.big) img{aspect-ratio:4/5;height:auto}
     .about{grid-template-columns:1fr;gap:28px}
     .mark{font-size:20px;letter-spacing:.26em}
     nav a{margin-left:12px;letter-spacing:.12em}
@@ -86,7 +100,7 @@
 <div class="wrap">
   <header>
     <div class="mark">半亩方塘<small>泉森 · SEMI MUTA</small></div>
-    <nav><a href="books/index.html">阅读</a><a href="#shots">记录</a><a href="#about">关于</a></nav>
+    <nav><a href="../books/index.html">阅读</a><a href="../photos/index.html">记录</a><a href="#about">关于</a></nav>
   </header>
 
   <div class="hero">
@@ -95,8 +109,8 @@
       <p>泉森，写字，也拍一点照片。<br>把读过的东西重新写一遍，把走过的路拍下来。不急，也不必急。</p>
     </div>
     <figure>
-      <img src="https://picsum.photos/seed/quansen-desk-window/900/1125" alt="窗边书桌">
-      <figcaption>绍兴，梅雨季的一张书桌</figcaption>
+      <img src="../img/photo-3.jpg" alt="秘鲁太平洋岸的岩壁与鸟">
+      <figcaption>秘鲁，太平洋边的岩壁</figcaption>
     </figure>
   </div>
 
@@ -125,21 +139,32 @@
   </section>
 
   <section id="shots">
-    <h2>记录</h2>
-    <div class="shots">
-      <figure class="big">
-        <img src="https://picsum.photos/seed/quansen-lane-rain/900/1200" alt="雨后的巷子">
-        <figcaption>雨停之后，巷子里的水还没干</figcaption>
-      </figure>
-      <figure>
-        <img src="https://picsum.photos/seed/quansen-tea-table/800/600" alt="茶桌">
-        <figcaption>下午四点，茶凉了一半</figcaption>
-      </figure>
-      <figure>
-        <img src="https://picsum.photos/seed/quansen-river-evening/800/600" alt="傍晚的河">
-        <figcaption>河边的风，比城里凉</figcaption>
-      </figure>
+    <div class="record-head">
+      <h2>记录</h2>
+      <p>影像不按时间排，按地方收拢。一个国家，一组照片。</p>
     </div>
+    <article class="country-feature">
+      <div class="country-copy">
+        <span class="country-meta">2026 · 秘鲁</span>
+        <h3>太平洋岸，<br>花与鸟</h3>
+        <p>海岸的风、花间的蜂鸟，还有停在岩壁前的鸟。</p>
+        <a class="archive-link" href="../photos/index.html">全部国家影像</a>
+      </div>
+      <div class="shots">
+        <figure class="big">
+          <img src="../img/countries/peru-01.jpg" alt="花间的蜂鸟">
+          <figcaption>花间的蜂鸟</figcaption>
+        </figure>
+        <figure>
+          <img src="../img/countries/peru-02.jpg" alt="水边的火烈鸟">
+          <figcaption>水边的火烈鸟</figcaption>
+        </figure>
+        <figure>
+          <img src="../img/countries/peru-03.jpg" alt="岩壁前的海鸟">
+          <figcaption>岩壁前的海鸟</figcaption>
+        </figure>
+      </div>
+    </article>
   </section>
 
   <section id="about">
