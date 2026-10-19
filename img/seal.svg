@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="title desc">
+  <title id="title">半亩方塘</title>
+  <desc id="desc">朱砂底、纸色四字的方形阴文印</desc>
+  <defs>
+    <filter id="rough-cut" x="-6%" y="-6%" width="112%" height="112%">
+      <feTurbulence type="fractalNoise" baseFrequency=".06" numOctaves="1" seed="9" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale=".9" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <linearGradient id="cinnabar" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ad4434"/>
+      <stop offset=".48" stop-color="#a63a2c"/>
+      <stop offset="1" stop-color="#963126"/>
+    </linearGradient>
+    <clipPath id="stamp-face">
+      <path d="M7 5 26 6 34 4 58 5 77 3 111 6 114 24 113 48 115 83 112 114 88 112 63 114 36 111 9 114 6 92 8 65 5 33Z"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#stamp-face)" fill="url(#cinnabar)">
+    <path d="M0 0H122V122H0Z"/>
+  </g>
+  <g filter="url(#rough-cut)">
+    <path d="M7 5 26 6 34 4 58 5 77 3 111 6 114 24 113 48 115 83 112 114 88 112 63 114 36 111 9 114 6 92 8 65 5 33Z" fill="url(#cinnabar)"/>
+    <path d="M18 17H102Q105 17 104 22V98Q104 102 99 101H21Q17 102 18 98V22Q18 18 18 17Z"
+      fill="none" stroke="#fbfaf7" stroke-width=".9" stroke-linejoin="round" opacity=".38"/>
+    <g fill="#fbfaf7" font-family="Weibei SC, STKaiti, KaiTi, serif"
+       font-size="30" font-weight="700" text-anchor="middle" dominant-baseline="central"
+       stroke="#fbfaf7" stroke-width=".8" stroke-linejoin="round" stroke-linecap="round"
+       paint-order="stroke fill">
+      <text x="82" y="40">半</text>
+      <text x="82" y="84">亩</text>
+      <text x="42" y="40">方</text>
+      <text x="42" y="84">塘</text>
+    </g>
+  </g>
+</svg>

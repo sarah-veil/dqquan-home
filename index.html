@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <title>泉森 · 半亩方塘</title>
 <style>
   :root{
@@ -26,7 +27,7 @@
 
   header{display:flex;justify-content:space-between;align-items:baseline;
     padding:34px 0 18px;border-bottom:1px solid var(--line)}
-  .mark{font-size:22px;letter-spacing:.34em;font-weight:500}
+  .mark{font-size:22px;letter-spacing:.34em;font-weight:500;color:var(--seal)}
   .mark small{display:block;font-size:11px;letter-spacing:.3em;color:var(--ink-3);margin-top:6px}
   nav a{font-size:13px;letter-spacing:.2em;margin-left:26px;text-decoration:none;color:var(--ink-2)}
   nav a:hover{color:var(--seal)}
@@ -43,11 +44,12 @@
   section h2{font-size:12px;letter-spacing:.36em;color:var(--ink-3);font-weight:400;margin:0 0 30px}
 
   .works{display:grid;grid-template-columns:repeat(3,1fr);gap:34px}
-  .work{border-top:1px solid var(--line);padding-top:18px}
+  .work{border-top:1px solid var(--line);padding-top:18px;display:flex;flex-direction:column}
   .work time{font-size:12px;color:var(--ink-3);letter-spacing:.08em}
   .work h3{font-size:19px;font-weight:500;margin:8px 0 8px;line-height:1.5}
   .work p{font-size:13px;color:var(--ink-2);margin:0 0 14px}
-  .work .listen{font-size:12px;letter-spacing:.1em;color:var(--seal);text-decoration:none;border-bottom:1px solid var(--seal);padding-bottom:1px}
+  .work .listen{font-size:12px;letter-spacing:.1em;color:var(--seal);text-decoration:none;
+    border-bottom:1px solid var(--seal);padding-bottom:1px;margin-top:auto;align-self:flex-start}
 
   .shots{display:grid;grid-template-columns:1.4fr 1fr;grid-template-rows:auto auto;gap:22px}
   .shots figure{margin:0}
@@ -59,9 +61,8 @@
 
   .about{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:start}
   .about p{font-size:15px;color:var(--ink-2);margin:0 0 16px;max-width:30em}
-  .seal{width:64px;height:64px;border:1px solid var(--seal);color:var(--seal);
-    display:flex;align-items:center;justify-content:center;font-size:17px;
-    letter-spacing:.12em;line-height:1.2;text-align:center;transform:rotate(-2deg)}
+  .seal{width:92px;height:92px;display:block}
+  .seal img{width:100%;height:100%}
 
   footer{border-top:1px solid var(--line);padding:34px 0 60px;
     display:flex;justify-content:space-between;font-size:12px;color:var(--ink-3);letter-spacing:.08em}
@@ -75,7 +76,8 @@
     .shots{grid-template-columns:1fr}
     .shots .big{grid-row:auto}
     .about{grid-template-columns:1fr;gap:28px}
-    nav a{margin-left:16px}
+    .mark{font-size:20px;letter-spacing:.26em}
+    nav a{margin-left:12px;letter-spacing:.12em}
     footer{flex-direction:column;gap:10px}
   }
 </style>
@@ -84,7 +86,7 @@
 <div class="wrap">
   <header>
     <div class="mark">半亩方塘<small>泉森 · SEMI MUTA</small></div>
-    <nav><a href="books/index.html">写下的</a><a href="#shots">拍下的</a><a href="#about">关于</a></nav>
+    <nav><a href="#works">听</a><a href="books/index.html">读</a><a href="#shots">记录</a><a href="#about">关于</a></nav>
   </header>
 
   <div class="hero">
@@ -99,7 +101,7 @@
   </div>
 
   <section id="works">
-    <h2>写下的</h2>
+    <h2>读</h2>
     <div class="works">
       <article class="work">
         <time>第 31 期</time>
@@ -124,7 +126,7 @@
   </section>
 
   <section id="shots">
-    <h2>拍下的</h2>
+    <h2>记录</h2>
     <div class="shots">
       <figure class="big">
         <img src="img/photo-1.jpg" alt="雨后的巷子">
@@ -143,7 +145,7 @@
 
   <section id="about">
     <div class="about">
-      <div class="seal">半亩<br>方塘</div>
+      <div class="seal"><img src="img/seal.svg" alt="半亩方塘"></div>
       <div>
         <p>泉森，写字的人，也拍一点照片。这里放重读旧书的记录，和一些不想发在别处的东西。</p>
         <p>想说话，写信给我。</p>
