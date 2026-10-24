@@ -32,9 +32,9 @@ COUNTRIES = [
     dict(
         slug="peru-2026", year="2026", name="秘鲁", key="peru",
         lead="从太平洋岸到高原湿地，留下三帧关于花、水与岩壁的画面。",
-        photos=[("peru-01.jpg", "花间的蜂鸟", "tall"),
-                ("peru-02.jpg", "水边的火烈鸟", "tall"),
-                ("peru-03.jpg", "岩壁前的海鸟", "tall")],
+        photos=[("peru-01.jpg", "紫色花穗上的蜂鸟", "tall"),
+                ("peru-02.jpg", "浅水中觅食的火烈鸟", "tall"),
+                ("peru-03.jpg", "岩壁上的印加燕鸥", "tall")],
     ),
     dict(
         slug="colombia-2019", year="2019", name="哥伦比亚", key="colombia",
