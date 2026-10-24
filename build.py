@@ -356,7 +356,7 @@ def upgrade_static_pages(books: list) -> None:
         s = s.replace(f'href="books/{b["no"]}.html"', f'href="books/{b["slug"]}/"')
     if "og:site_name" not in s:
         og = OG_BLOCK.format(
-            desc="阅读、思考，也拍一些照片。重读旧书的札记，和一些愿意分享的事物，都在这里。",
+            desc="泉森的半亩方塘：一百部书的札记，按国家收拢的照片。",
             ogtype="website", title="泉森 · 半亩方塘", url=f"{SITE}/", image=OG_IMAGE)
         s = s.replace("</head>", og + "</head>", 1)
     idx.write_text(s, encoding="utf-8")
