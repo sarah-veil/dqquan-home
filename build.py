@@ -59,6 +59,9 @@ COUNTRIES = [
     ),
 ]
 
+# 这些期的封面是公众号成版图（图上自带书名/期号/印章），页面不再叠字
+BAKED_COVER = set(range(2, 23)) | {26, 27, 28, 29}
+
 CSS_TOKENS = """:root{--paper:#fbfaf7;--ink:#1f1f1f;--ink-2:#555;--ink-3:#6e6a62;--line:#e3e0d8;--seal:#a63a2c}"""
 
 
@@ -209,13 +212,23 @@ def build_books_index(books: list) -> None:
         return f"{lo:02d} — {hi:02d}"
 
     parts = []
-    for k in sorted(groups):
-        parts.append(f'<h2 class="grp">{group_title(k)}</h2><ul>')
-        for b in groups[k]:
+    for k in sorted(groups, reverse=True):
+        parts.append(f'<h2 class="grp">{group_title(k)}</h2><div class="grid">')
+        for b in sorted(groups[k], key=lambda x: -x["no"]):
             num = "序" if b["no"] == 0 else f'{b["no"]:02d}'
-            parts.append(
-                f'<li><a href="{b["slug"]}/"><span>{num}</span>{html.escape(b["title"])}</a></li>')
-        parts.append("</ul>")
+            cover = ROOT / "img" / "covers" / f'b{b["no"]:02d}.webp'
+            title = html.escape(b["title"])
+            if cover.exists():
+                # 所有期统一走「成版封面」：图上已带三行抬头、书名、期号与同一枚朱红印
+                parts.append(
+                    f'<a class="book-card baked" href="{b["slug"]}/">'
+                    f'<img class="cover" src="../img/covers/b{b["no"]:02d}.webp" alt="{title}"></a>')
+            else:
+                parts.append(
+                    f'<a class="book-card plain" data-no="{num}" href="{b["slug"]}/">'
+                    f'<span class="no">{num}</span><h3>{title}</h3>'
+                    f'<img class="seal" src="../img/seal.svg" alt="半亩方塘"></a>')
+        parts.append('</div>')
     listing = "\n".join(parts)
 
     page = f"""<!DOCTYPE html>
@@ -230,7 +243,7 @@ def build_books_index(books: list) -> None:
 <style>
 {CSS_TOKENS}
 body{{margin:0;background:var(--paper);color:var(--ink);font-family:"Songti SC","Noto Serif CJK SC",serif;line-height:1.9}}
-.wrap{{max-width:720px;margin:0 auto;padding:0 26px}}
+.wrap{{max-width:980px;margin:0 auto;padding:0 26px}}
 header{{display:flex;justify-content:space-between;padding:30px 0 16px;border-bottom:1px solid var(--line);font-size:13px;letter-spacing:.2em}}
 header a{{text-decoration:none}}
 h1{{font-size:34px;font-weight:500;margin:46px 0 8px}}
@@ -238,15 +251,36 @@ p.lede{{color:var(--ink-2);font-size:14px;margin:0 0 10px}}
 .progress{{font-size:12px;color:var(--ink-3);letter-spacing:.14em;margin:0 0 34px}}
 .bar{{height:2px;background:var(--line);margin:10px 0 0}}
 .bar i{{display:block;height:2px;background:var(--seal);width:{min(published,100)}%}}
-h2.grp{{font-size:12px;letter-spacing:.3em;color:var(--ink-3);font-weight:400;margin:44px 0 6px}}
-ul{{list-style:none;padding:0;margin:0}}
-li{{border-bottom:1px solid var(--line)}}
-li a{{display:flex;gap:18px;padding:14px 2px;text-decoration:none;font-size:17px}}
-li a:hover{{color:var(--seal)}}
-li span{{color:var(--ink-3);font-size:12px;min-width:26px;padding-top:4px}}
+h2.grp{{font-size:12px;letter-spacing:.3em;color:var(--ink-3);font-weight:400;margin:48px 0 14px}}
+.grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}}
+.book-card{{position:relative;display:block;aspect-ratio:2.35/1;overflow:hidden;
+  text-decoration:none;background:#f2efe6}}
+.book-card .cover{{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  transition:transform .5s ease}}
+.book-card:hover .cover{{transform:scale(1.025)}}
+.book-card::after{{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,.18) 0%,rgba(0,0,0,.04) 38%,rgba(0,0,0,.62) 100%)}}
+.book-card.baked::after{{background:none}}
+.book-card.plain{{background:linear-gradient(135deg,#f4f1e8 0%,#efece2 100%)}}
+.book-card.plain::after{{background:none}}
+.book-card.plain::before{{content:attr(data-no);position:absolute;right:6px;top:-16px;
+  font-size:76px;line-height:1;font-weight:500;color:rgba(31,31,31,.06);letter-spacing:-.02em}}
+.book-card .no{{position:absolute;left:16px;top:13px;z-index:2;font-size:11px;
+  letter-spacing:.22em;color:#fff;opacity:.85}}
+.book-card h3{{position:absolute;left:16px;right:62px;bottom:14px;z-index:2;margin:0;
+  font-size:19px;line-height:1.35;font-weight:500;color:#fff;letter-spacing:.02em}}
+.book-card .seal{{position:absolute;right:13px;bottom:12px;z-index:2;width:36px;height:36px;opacity:.8}}
+.book-card.plain .no{{color:var(--ink-3);opacity:1}}
+.book-card.plain h3{{color:var(--ink)}}
+.book-card:hover h3{{color:var(--seal)}}
 header .mark{{color:var(--seal)}}
 footer{{margin:60px 0 70px;font-size:12px;color:var(--ink-3);letter-spacing:.08em}}
 footer a{{text-decoration:none;border-bottom:1px solid var(--line)}}
+@media (max-width:640px){{
+  .grid{{grid-template-columns:1fr}}
+  .book-card h3{{font-size:17px;right:54px}}
+  .book-card .seal{{width:32px;height:32px}}
+}}
 </style></head><body><div class="wrap">
 <header><span class="mark">半亩方塘</span><a href="../index.html">回到首页</a></header>
 <h1>重温百部名著</h1>
