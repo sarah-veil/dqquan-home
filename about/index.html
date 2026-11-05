@@ -16,40 +16,87 @@
 
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
 <style>
-:root{--paper:#fbfaf7;--ink:#1f1f1f;--ink-2:#555;--ink-3:#6e6a62;--line:#e3e0d8;--seal:#a63a2c}
+:root{--paper:#f7f4ed;--ink:#201f1b;--ink-2:#5f5b53;--ink-3:#6f685f;--line:#d7d0c2;--line-dark:#b9b0a1;--seal:#9b3227}
+*{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:"Songti SC","Noto Serif CJK SC",serif;line-height:1.95}
-.wrap{max-width:680px;margin:0 auto;padding:0 26px}
-header{display:flex;justify-content:space-between;align-items:baseline;padding:34px 0 18px;border-bottom:1px solid var(--line)}
-.mark{font-size:20px;letter-spacing:.3em;color:var(--seal)}
-header a{text-decoration:none;font-size:13px;letter-spacing:.2em;color:var(--ink-2)}
-h1{font-size:clamp(28px,4vw,40px);font-weight:500;margin:64px 0 34px;line-height:1.3}
-section{margin:0 0 40px}
-h2{font-size:12px;letter-spacing:.36em;color:var(--ink-3);font-weight:400;margin:0 0 14px}
-p{font-size:16px;color:var(--ink-2);margin:0 0 14px;max-width:30em}
-.seal{margin:52px 0 0}
+img{display:block;max-width:100%}
+.wrap{max-width:760px;margin:0 auto;padding:0 28px}
+header{display:flex;justify-content:space-between;align-items:baseline;padding:34px 0 24px;border-bottom:1px solid var(--line)}
+.mark{font-size:22px;letter-spacing:.34em;color:var(--seal);text-decoration:none}
+nav{display:flex;gap:28px}
+nav a{text-decoration:none;font-size:12px;letter-spacing:.18em;color:var(--ink-2)}
+nav a:hover,nav a[aria-current="page"]{color:var(--seal)}
+.intro{padding:72px 0 54px;border-bottom:1px solid var(--line-dark)}
+.kicker{display:flex;align-items:center;gap:12px;margin:0 0 18px;color:var(--ink-3);font-size:11px;letter-spacing:.18em}
+.kicker::before{content:"";width:32px;height:1px;background:var(--seal)}
+h1{font-size:clamp(34px,6vw,54px);font-weight:500;margin:0 0 22px;line-height:1.25;text-wrap:balance}
+.intro p{margin:0;max-width:31em;color:var(--ink-2);font-size:17px;line-height:1.95}
+.essay{display:grid;grid-template-columns:150px 1fr;gap:38px;padding:38px 0 42px;border-bottom:1px solid var(--line)}
+h2{font-size:11px;letter-spacing:.3em;color:var(--ink-3);font-weight:400;margin:5px 0 0}
+.essay p{font-size:16px;color:var(--ink-2);margin:0 0 16px;max-width:32em}
+.essay p:last-child{margin-bottom:0}
+.entry{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-bottom:1px solid var(--line-dark)}
+.entry a{display:flex;flex-direction:column;min-height:150px;padding:24px 22px 22px;
+  text-decoration:none;border-left:1px solid var(--line)}
+.entry a:first-child{padding-left:0;border-left:0}
+.entry span{color:var(--ink-3);font-size:10px;letter-spacing:.14em}
+.entry strong{margin-top:auto;font-weight:500;font-size:17px;line-height:1.55}
+.entry small{margin-top:7px;color:var(--ink-2);font-size:11px;line-height:1.7}
+.entry a:hover strong{color:var(--seal)}
+.contact{display:grid;grid-template-columns:150px 1fr;gap:38px;padding:38px 0 44px}
+.contact p{margin:0;color:var(--ink-2);font-size:15px}
+.contact a{text-decoration:none;border-bottom:1px solid var(--line-dark);padding-bottom:2px}
+.contact a:hover{color:var(--seal);border-color:var(--seal)}
 .seal img{width:92px;height:92px}
-footer{margin:70px 0 80px;padding-top:22px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3);letter-spacing:.08em}
+footer{display:flex;justify-content:space-between;gap:20px;margin:58px 0 70px;padding-top:22px;
+  border-top:1px solid var(--line);font-size:12px;color:var(--ink-3);letter-spacing:.08em}
 footer a{text-decoration:none;border-bottom:1px solid var(--line)}
+@media (max-width:640px){
+  .wrap{padding:0 20px}
+  nav{gap:14px}
+  nav a{font-size:11px;letter-spacing:.08em}
+  .mark{font-size:19px;letter-spacing:.24em}
+  .intro{padding:52px 0 40px}
+  .essay,.contact{grid-template-columns:1fr;gap:12px;padding:30px 0 34px}
+  .entry{grid-template-columns:1fr}
+  .entry a,.entry a:first-child{min-height:0;padding:20px 0;border-left:0;border-top:1px solid var(--line)}
+  .entry strong{margin-top:8px}
+  footer{flex-direction:column;gap:8px}
+}
 </style></head>
 <body><div class="wrap">
-<header><span class="mark">半亩方塘</span><a href="../index.html">回到首页</a></header>
-<h1>关于这半亩方塘</h1>
-<section>
-  <h2>我是谁</h2>
-  <p>（待写。两三句就够，不必交代履历。）</p>
+<header>
+  <a class="mark" href="../index.html">半亩方塘</a>
+  <nav><a href="../books/index.html">阅读</a><a href="../photos/index.html">影像</a><a href="index.html" aria-current="page">关于</a></nav>
+</header>
+<section class="intro">
+  <p class="kicker">关于这份刊物</p>
+  <h1>文字是内景，<br>照片是外景。</h1>
+  <p>半亩方塘是一份由泉森持续写作、拍摄的个人刊物：一百部书的阅读札记，以及走过不同国家时留下的影像。这里没有履历，也不追热点；只有读过的书、看见的地方，和它们在一个人的生活里留下的回声。</p>
 </section>
-<section>
+<section class="essay">
   <h2>为什么读</h2>
-  <p>（待写。）</p>
+  <div>
+    <p>“半亩方塘一鉴开，天光云影共徘徊。问渠那得清如许？为有源头活水来。”朱熹写的不是风景，是读书：不大的塘子能照见天光云影，是因为底下一直有活水流过。</p>
+    <p>一次讲一本，一本留下一个念头。清单让人望而生畏，一本一本地讲，讲完一本是一本。计划写到一百期；哪一期让人愿意去找原书翻一翻，这一期就算写成了。</p>
+  </div>
 </section>
-<section>
+<section class="essay">
   <h2>为什么拍</h2>
-  <p>（待写。）</p>
+  <div>
+    <p>照片不是游记的插图，也不负责替文字作注。书把人带向内心，照片把人重新带回眼前：一只停在花前的蜂鸟、草原落下的一束光、峡湾边刚刚亮起的灯。</p>
+    <p>“镜中方塘”把它们收进方形或竖幅的边框，像水面映出一块远处的世界。文字与照片并排放在一起，才是一份完整的半亩方塘。</p>
+  </div>
 </section>
-<section>
-  <h2>联系</h2>
-  <p><a href="mailto:quan@dqquan.com">quan@dqquan.com</a>　·　<a href="../feed.xml">RSS 订阅</a></p>
+<section class="entry" aria-label="从这里开始">
+  <a href="../books/000/"><span>第一次来</span><strong>先读序</strong><small>名字和一百部书的来由</small></a>
+  <a href="../books/031/"><span>最新一期</span><strong>世界最简单的才能发现法</strong><small>找到不由自主就会做的事</small></a>
+  <a href="../photos/"><span>换一种观看</span><strong>进入影像档案</strong><small>秘鲁、哥伦比亚、肯尼亚、挪威</small></a>
+</section>
+<section class="contact">
+  <h2>联系与订阅</h2>
+  <p>来信：<a href="mailto:quan@dqquan.com">quan@dqquan.com</a><br>订阅：<a href="../feed.xml">RSS</a></p>
 </section>
 <div class="seal"><img src="../img/seal.svg" alt="半亩方塘"></div>
-<footer><a href="../index.html">泉森 · 半亩方塘</a></footer>
+<footer><a href="../index.html">泉森 · 半亩方塘</a><span>一百部书，一百个夜晚。</span></footer>
 </div></body></html>

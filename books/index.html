@@ -17,17 +17,36 @@
 
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
 <style>
-:root{--paper:#fbfaf7;--ink:#1f1f1f;--ink-2:#555;--ink-3:#6e6a62;--line:#e3e0d8;--seal:#a63a2c}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:"Songti SC","Noto Serif CJK SC",serif;line-height:1.9}
-.wrap{max-width:980px;margin:0 auto;padding:0 26px}
-header{display:flex;justify-content:space-between;padding:30px 0 16px;border-bottom:1px solid var(--line);font-size:13px;letter-spacing:.2em}
+:root{--paper:#f7f4ed;--ink:#201f1b;--ink-2:#5f5b53;--ink-3:#6f685f;--line:#d7d0c2;--line-dark:#b9b0a1;--seal:#9b3227}
+*{box-sizing:border-box}
+body{margin:0;background:#f7f4ed;color:var(--ink);font-family:"Songti SC","Noto Serif CJK SC",serif;line-height:1.9}
+.wrap{width:min(calc(100% - 72px),1080px);margin:0 auto}
+header{display:flex;justify-content:space-between;align-items:baseline;padding:34px 0 24px;border-bottom:1px solid var(--line)}
 header a{text-decoration:none}
-h1{font-size:34px;font-weight:500;margin:46px 0 8px}
-p.lede{color:var(--ink-2);font-size:14px;margin:0 0 10px}
-.progress{font-size:12px;color:var(--ink-3);letter-spacing:.14em;margin:0 0 34px}
-.bar{height:2px;background:var(--line);margin:10px 0 0}
+header .mark{color:var(--seal);font-size:22px;letter-spacing:.34em}
+header nav{display:flex;gap:28px;font-size:12px;letter-spacing:.18em}
+header nav a{color:var(--ink-2)}
+header nav a:hover,header nav a[aria-current="page"]{color:var(--seal)}
+.intro{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:54px;align-items:end;padding:68px 0 46px}
+.intro-kicker{display:flex;align-items:center;gap:12px;margin:0 0 18px;color:var(--ink-3);font-size:11px;letter-spacing:.18em}
+.intro-kicker::before{content:"";width:32px;height:1px;background:var(--seal)}
+h1{font-size:clamp(36px,5vw,62px);font-weight:500;line-height:1.2;margin:0}
+p.lede{color:var(--ink-2);font-size:15px;margin:16px 0 0}
+.progress{font-size:11px;color:var(--ink-3);letter-spacing:.14em;margin:0;text-align:right}
+.progress strong{display:block;color:var(--ink);font-size:38px;font-weight:500;line-height:1.2;letter-spacing:0;margin-bottom:5px}
+.bar{height:2px;background:var(--line);margin:12px 0 0}
 .bar i{display:block;height:2px;background:var(--seal);width:31%}
-h2.grp{font-size:12px;letter-spacing:.3em;color:var(--ink-3);font-weight:400;margin:48px 0 14px}
+.view-input{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.view-switch{display:flex;gap:8px;padding:20px 0 28px;border-top:1px solid var(--line-dark)}
+.view-switch label{cursor:pointer;padding:7px 15px;border:1px solid var(--line);font-size:11px;letter-spacing:.14em;color:var(--ink-3);transition:.2s ease}
+.view-switch label:hover{border-color:var(--line-dark);color:var(--ink)}
+#view-covers:checked ~ .view-switch label[for="view-covers"],
+#view-axis:checked ~ .view-switch label[for="view-axis"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.view-input:focus-visible ~ .view-switch label{outline:2px solid var(--seal);outline-offset:3px}
+#view-axis:checked ~ .views .covers{display:none}
+#view-covers:checked ~ .views .axis{display:none}
+h2.grp{display:flex;align-items:center;gap:14px;font-size:11px;letter-spacing:.3em;color:var(--ink-3);font-weight:400;margin:42px 0 14px}
+h2.grp::after{content:"";height:1px;flex:1;background:var(--line)}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 .book-card{position:relative;display:block;aspect-ratio:2.35/1;overflow:hidden;
   text-decoration:none;background:#f2efe6}
@@ -49,21 +68,61 @@ h2.grp{font-size:12px;letter-spacing:.3em;color:var(--ink-3);font-weight:400;mar
 .book-card.plain .no{color:var(--ink-3);opacity:1}
 .book-card.plain h3{color:var(--ink)}
 .book-card:hover h3{color:var(--seal)}
-header .mark{color:var(--seal)}
-footer{margin:60px 0 70px;font-size:12px;color:var(--ink-3);letter-spacing:.08em}
+.axis{border-top:1px solid var(--line-dark)}
+.axis-intro{display:grid;grid-template-columns:160px 1fr;gap:32px;padding:24px 0 34px}
+.axis-intro h2{margin:0;font-size:23px;font-weight:500}
+.axis-intro p{margin:0;max-width:38em;color:var(--ink-2);font-size:13px}
+.axis-list{display:grid;grid-template-columns:1fr 1fr;column-gap:54px}
+.axis-row{display:grid;grid-template-columns:36px minmax(115px,.75fr) minmax(0,1.25fr) 12px;gap:14px;align-items:baseline;padding:15px 0;border-top:1px solid var(--line);text-decoration:none}
+.axis-no{font-size:10px;letter-spacing:.1em;color:var(--ink-3)}
+.axis-main strong{display:block;font-size:15px;line-height:1.55;font-weight:500}
+.axis-main em{display:block;margin-top:1px;color:var(--ink-3);font-size:10px;font-style:normal;letter-spacing:.05em;line-height:1.55}
+.axis-note{color:var(--ink-2);font-size:11px;line-height:1.7}
+.axis-arrow{color:var(--ink-3);font-size:11px;transition:transform .2s ease}
+.axis-row:hover .axis-main strong,.axis-row:hover .axis-arrow{color:var(--seal)}
+.axis-row:hover .axis-arrow{transform:translateX(3px)}
+footer{display:flex;justify-content:space-between;gap:20px;margin:64px 0 70px;padding-top:22px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3);letter-spacing:.08em}
 footer a{text-decoration:none;border-bottom:1px solid var(--line)}
 @media (max-width:640px){
+  .wrap{width:calc(100% - 40px)}
+  header nav{gap:14px;letter-spacing:.08em}
+  header .mark{font-size:19px;letter-spacing:.24em}
+  .intro{grid-template-columns:1fr;gap:24px;padding:48px 0 34px}
+  .progress{text-align:left}
+  .progress strong{display:inline;font-size:13px;margin-right:8px}
+  .axis-intro{grid-template-columns:1fr;gap:10px}
+  .axis-list{grid-template-columns:1fr}
+  .axis-row{grid-template-columns:32px 1fr 12px;gap:10px}
+  .axis-note{grid-column:2/4;margin-top:-8px}
   .grid{grid-template-columns:1fr}
   .book-card h3{font-size:17px;right:54px}
   .book-card .seal{width:32px;height:32px}
+  footer{flex-direction:column;gap:8px}
 }
 </style></head><body><div class="wrap">
-<header><span class="mark">半亩方塘</span><a href="../index.html">回到首页</a></header>
-<h1>重温百部名著</h1>
-<p class="lede">一百部书，一百个夜晚。</p>
-<p class="progress">已读 31 / 100</p>
-<div class="bar"><i></i></div>
-<h2 class="grp">31 — 40</h2><div class="grid">
+<header>
+  <a class="mark" href="../index.html">半亩方塘</a>
+  <nav><a href="index.html" aria-current="page">阅读</a><a href="../photos/index.html">影像</a><a href="../about/index.html">关于</a></nav>
+</header>
+<section class="intro">
+  <div>
+    <p class="intro-kicker">阅读札记</p>
+    <h1>重温百部名著</h1>
+    <p class="lede">一百部书，一百个夜晚。封面是读过的书，编刊轴是走过的路。</p>
+  </div>
+  <div>
+    <p class="progress"><strong>31 / 100</strong>已读 · 持续编刊中</p>
+    <div class="bar"><i></i></div>
+  </div>
+</section>
+<input class="view-input" type="radio" name="book-view" id="view-covers" checked>
+<input class="view-input" type="radio" name="book-view" id="view-axis">
+<div class="view-switch">
+  <label for="view-covers">封面墙</label>
+  <label for="view-axis">编刊轴</label>
+</div>
+<div class="views">
+  <section class="covers" aria-label="封面墙"><h2 class="grp">31 — 40</h2><div class="grid">
 <a class="book-card baked" href="031/"><img class="cover" src="../img/covers/b31.webp" alt="世界最简单的才能发现法"></a>
 </div>
 <h2 class="grp">21 — 30</h2><div class="grid">
@@ -104,6 +163,45 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line)}
 </div>
 <h2 class="grp">开卷</h2><div class="grid">
 <a class="book-card baked" href="000/"><img class="cover" src="../img/covers/b00.webp" alt="序"></a>
+</div></section>
+  <section class="axis" aria-labelledby="axis-title">
+    <div class="axis-intro">
+      <h2 id="axis-title">编刊轴</h2>
+      <p>按刊期回看。每一条不是书评摘要，而是这一期留下的一个念头；三十一期连在一起，才像一条真正走过的阅读线索。</p>
+    </div>
+    <div class="axis-list"><a class="axis-row" href="031/"><span class="axis-no">31</span><span class="axis-main"><strong>世界最简单的才能发现法</strong><em>八木仁平</em></span><span class="axis-note">找到那件不由自主就会做的事。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="030/"><span class="axis-no">30</span><span class="axis-main"><strong>过于喧嚣的孤独</strong><em>博胡米尔·赫拉巴尔</em></span><span class="axis-note">一个人在废纸堆里守住自己的世界。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="029/"><span class="axis-no">29</span><span class="axis-main"><strong>菊次郎与佐纪</strong><em>北野武</em></span><span class="axis-note">母亲与儿子迟到又笨拙的和解。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="028/"><span class="axis-no">28</span><span class="axis-main"><strong>孩子你慢慢来</strong><em>龙应台</em></span><span class="axis-note">如何陪一个孩子按自己的速度长大。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="027/"><span class="axis-no">27</span><span class="axis-main"><strong>西线无战事</strong><em>埃里希·玛丽亚·雷马克</em></span><span class="axis-note">战争如何摧毁一代年轻人。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="026/"><span class="axis-no">26</span><span class="axis-main"><strong>白夜行</strong><em>东野圭吾</em></span><span class="axis-note">两段人生在黑暗里彼此照亮又彼此代价。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="025/"><span class="axis-no">25</span><span class="axis-main"><strong>黄金时代</strong><em>王小波</em></span><span class="axis-note">在荒诞时代保存坦荡与自由。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="024/"><span class="axis-no">24</span><span class="axis-main"><strong>尘埃落定</strong><em>阿来</em></span><span class="axis-note">土司制度衰亡中的一个“傻子”视角。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="023/"><span class="axis-no">23</span><span class="axis-main"><strong>红与黑</strong><em>司汤达</em></span><span class="axis-note">野心、阶层与爱情。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="022/"><span class="axis-no">22</span><span class="axis-main"><strong>骆驼祥子</strong><em>老舍</em></span><span class="axis-note">一个普通人被现实一点点碾碎。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="021/"><span class="axis-no">21</span><span class="axis-main"><strong>基督山伯爵</strong><em>大仲马</em></span><span class="axis-note">冤屈、等待、复仇与宽恕。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="020/"><span class="axis-no">20</span><span class="axis-main"><strong>沉思录</strong><em>马可·奥勒留</em></span><span class="axis-note">如何在不可控的世界里安顿自己。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="019/"><span class="axis-no">19</span><span class="axis-main"><strong>一句顶一万句</strong><em>刘震云</em></span><span class="axis-note">人一生都在寻找能说得上话的人。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="018/"><span class="axis-no">18</span><span class="axis-main"><strong>我，机器人</strong><em>艾萨克·阿西莫夫</em></span><span class="axis-note">机器人三定律的边界与漏洞。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="017/"><span class="axis-no">17</span><span class="axis-main"><strong>子夜</strong><em>茅盾</em></span><span class="axis-note">资本、城市和中国社会转型的截面。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="016/"><span class="axis-no">16</span><span class="axis-main"><strong>呼啸山庄</strong><em>艾米莉·勃朗特</em></span><span class="axis-note">爱与复仇如何越过一代。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="015/"><span class="axis-no">15</span><span class="axis-main"><strong>边城</strong><em>沈从文</em></span><span class="axis-note">温柔山水里的人情与命运。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="014/"><span class="axis-no">14</span><span class="axis-main"><strong>局外人</strong><em>阿尔贝·加缪</em></span><span class="axis-note">一个人在荒诞世界里的真实与疏离。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="013/"><span class="axis-no">13</span><span class="axis-main"><strong>白鹿原</strong><em>陈忠实</em></span><span class="axis-note">家族、土地和时代变迁。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="012/"><span class="axis-no">12</span><span class="axis-main"><strong>乱世佳人</strong><em>玛格丽特·米切尔</em></span><span class="axis-note">一个女人在崩塌世界里重建生活。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="011/"><span class="axis-no">11</span><span class="axis-main"><strong>傲慢与偏见</strong><em>简·奥斯汀</em></span><span class="axis-note">判断如何被偏见遮蔽，又如何被理解修正。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="010/"><span class="axis-no">10</span><span class="axis-main"><strong>肖申克的救赎</strong><em>斯蒂芬·金</em></span><span class="axis-note">在封闭系统里保存自由和希望。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="009/"><span class="axis-no">09</span><span class="axis-main"><strong>我们仨</strong><em>杨绛</em></span><span class="axis-note">一家三口相守与失散的记忆。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="008/"><span class="axis-no">08</span><span class="axis-main"><strong>老人与海</strong><em>海明威</em></span><span class="axis-note">人可以被毁掉，但不能被打败。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="007/"><span class="axis-no">07</span><span class="axis-main"><strong>平凡的世界</strong><em>路遥</em></span><span class="axis-note">普通人在时代里挣得自己的生活。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="006/"><span class="axis-no">06</span><span class="axis-main"><strong>活着</strong><em>余华</em></span><span class="axis-note">一个人怎样承受命运，继续活下去。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="005/"><span class="axis-no">05</span><span class="axis-main"><strong>百年孤独</strong><em>加西亚·马尔克斯</em></span><span class="axis-note">一个家族在时间里的盛衰与孤独。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="004/"><span class="axis-no">04</span><span class="axis-main"><strong>围城</strong><em>钱锺书</em></span><span class="axis-note">婚姻与人生的进与出。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="003/"><span class="axis-no">03</span><span class="axis-main"><strong>态度改变与社会影响</strong><em>菲利普·津巴多</em></span><span class="axis-note">人怎样被说服，又怎样改变自己。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="002/"><span class="axis-no">02</span><span class="axis-main"><strong>人类简史</strong><em>尤瓦尔·赫拉利</em></span><span class="axis-note">人如何靠共同想象组织成社会。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="001/"><span class="axis-no">01</span><span class="axis-main"><strong>活出生命的意义</strong><em>维克多·弗兰克尔</em></span><span class="axis-note">人在一无所有时，还能守住什么。</span><span class="axis-arrow" aria-hidden="true">→</span></a>
+<a class="axis-row" href="000/"><span class="axis-no">00</span><span class="axis-main"><strong>序</strong><em>泉森</em></span><span class="axis-note">一百部书，一百个夜晚的来由。</span><span class="axis-arrow" aria-hidden="true">→</span></a></div>
+  </section>
 </div>
-<footer><a href="../index.html">泉森 · 半亩方塘</a> · <a href="../feed.xml">RSS</a></footer>
+<footer><a href="../index.html">泉森 · 半亩方塘</a><span><a href="../feed.xml">RSS</a> · <a href="mailto:quan@dqquan.com">quan@dqquan.com</a></span></footer>
 </div></body></html>

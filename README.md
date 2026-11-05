@@ -37,11 +37,16 @@ python3 build.py            # 全部重建（书页/目录/相册/sitemap/404/OG
 python3 build.py books      # 只重建书页
 python3 build.py photos     # 只重建相册
 python3 build.py sitemap    # 只重建 sitemap
+python3 build.py feed       # 只重建 RSS
 
 python3 make_images.py      # 生成 WebP 两档（新增国家照片后跑）
 ```
 
 幂等，可反复跑。**改完本地起服务看一遍再推：**
+
+- `build.py books` 会为正文里的短标题补小标题层级、生成文内目录，并从 `BOOK_SCENES` 给指定篇目挂“书边影像”。
+- `build.py books` 同时生成阅读页的“封面墙 / 编刊轴”两种视图；书目作者与一句摘要在 `BOOK_META` 维护。
+- `build.py feed` 生成指向站内正文的 RSS，不再使用旧公众号链接。
 
 ```bash
 python3 -m http.server 8899
@@ -78,5 +83,5 @@ GitHub Pages 会在 1 分钟内自动发布。
 
 ## 导航约定
 
-导航保持三个词：**阅读 / 记录 / 关于**。
+导航保持三个词：**阅读 / 影像 / 关于**。
 正文里不出现作者职务、单位、社交账号。

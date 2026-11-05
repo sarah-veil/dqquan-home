@@ -20,6 +20,7 @@ import sys
 import html
 from pathlib import Path
 from datetime import datetime, timezone
+from email.utils import format_datetime
 
 ROOT = Path(__file__).resolve().parent
 SITE = "https://dqquan.com"
@@ -62,7 +63,7 @@ COUNTRIES = [
 # 这些期的封面是公众号成版图（图上自带书名/期号/印章），页面不再叠字
 BAKED_COVER = set(range(2, 23)) | {26, 27, 28, 29}
 
-CSS_TOKENS = """:root{--paper:#fbfaf7;--ink:#1f1f1f;--ink-2:#555;--ink-3:#6e6a62;--line:#e3e0d8;--seal:#a63a2c}"""
+CSS_TOKENS = """:root{--paper:#f7f4ed;--ink:#201f1b;--ink-2:#5f5b53;--ink-3:#6f685f;--line:#d7d0c2;--line-dark:#b9b0a1;--seal:#9b3227}"""
 
 
 def rel(path: Path) -> str:
@@ -100,7 +101,7 @@ def load_books():
         tm = re.search(r"<title>([^<]+)</title>", src)
         title = html.unescape(tm.group(1)).split(" · ")[0].strip() if tm else f"第{no}期"
         books.append(dict(no=no, slug=f"{no:03d}", title=title,
-                          path=ROOT / "books" / p.name, html=src))
+                          path=ROOT / "books" / p.name, source=p, html=src))
     books.sort(key=lambda b: b["no"])
     return books
 
@@ -118,19 +119,100 @@ OG_BLOCK = """<meta name="description" content="{desc}">
 """
 
 PAGER_CSS = """
+  article h2.section{font-size:23px;line-height:1.5;font-weight:500;margin:52px 0 18px;
+    padding-top:20px;border-top:1px solid var(--line);letter-spacing:.01em}
+  article p.aside{margin:30px 0;padding:19px 22px;border-left:2px solid var(--seal);
+    background:rgba(155,50,39,.045);color:var(--ink);font-size:18px!important;line-height:1.8}
+  .article-toc{margin:0 0 34px;padding:18px 0 20px;border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line)}
+  .article-toc strong{display:block;margin-bottom:8px;color:var(--ink-3);
+    font-size:10px;font-weight:400;letter-spacing:.2em}
+  .article-toc a{display:inline-block;margin:3px 18px 3px 0;color:var(--ink-2);
+    font-size:12px;line-height:1.7;text-decoration:none}
+  .article-toc a:hover{color:var(--seal)}
+  .book-scene{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:28px;
+    align-items:center;margin:58px 0 8px;padding:26px 0;border-top:1px solid var(--line-dark);
+    border-bottom:1px solid var(--line)}
+  .book-scene img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;
+    filter:grayscale(.1) saturate(.84)}
+  .book-scene .scene-label{margin:0 0 10px;color:var(--ink-3);font-size:10px;
+    letter-spacing:.16em;line-height:1.6}
+  .book-scene blockquote{margin:0;color:var(--ink);font-size:18px;line-height:1.75}
+  .book-scene p.scene-note{margin:12px 0 18px;color:var(--ink-2);font-size:12px;line-height:1.8}
+  .book-scene a.scene-link{color:var(--seal);font-size:11px;letter-spacing:.08em;
+    text-decoration:none;border-bottom:1px solid var(--seal);padding-bottom:2px}
   .pager{display:flex;justify-content:space-between;gap:24px;margin:56px 0 0;
     padding-top:22px;border-top:1px solid var(--line);font-size:13px;letter-spacing:.06em}
   .pager a{text-decoration:none;color:var(--ink-2);max-width:46%}
   .pager a:hover{color:var(--seal)}
   .pager .next{margin-left:auto;text-align:right}
-  @media (max-width:640px){.pager{flex-direction:column;gap:14px}.pager .next{margin-left:0;text-align:left}}
+  @media (max-width:640px){
+    article h2.section{font-size:21px;margin-top:42px}
+    article p.aside{font-size:17px!important;padding:16px 18px}
+    .article-toc a{display:block;margin-right:0}
+    .book-scene{grid-template-columns:1fr;gap:18px}
+    .book-scene img{aspect-ratio:5/4}
+    .pager{flex-direction:column;gap:14px}.pager .next{margin-left:0;text-align:left}
+  }
 """
+
+
+def improve_article_reading(s: str) -> str:
+    """给正文里本来就有的短标题补层级，并生成轻量目录。"""
+    m = re.search(r"(<article>)(.*?)(</article>)", s, flags=re.S)
+    if not m:
+        return s
+
+    tm = re.search(r"<h1>(.*?)</h1>", s, flags=re.S)
+    page_title = html.unescape(re.sub(r"<[^>]+>", "", tm.group(1))).strip() if tm else ""
+    headings = []
+
+    def repl(pm):
+        inner = pm.group(1).strip()
+        plain = html.unescape(re.sub(r"<[^>]+>", "", inner)).strip()
+
+        if (
+            plain.rstrip("：:") == page_title
+            or re.fullmatch(r"第\s*\d+\s*期", plain)
+            or plain.startswith("半亩方塘 · 重温百部名著")
+            or re.fullmatch(r"《.+?》｜.+", plain)
+        ):
+            return pm.group(0)
+
+        if plain.startswith("★"):
+            text = html.escape(plain.lstrip("★").strip())
+            return f'<p class="aside"><span aria-hidden="true">◆ </span>{text}</p>'
+
+        if not plain or plain == "---" or re.search(r"[←→=×＝]", plain):
+            return pm.group(0)
+
+        ends_sentence = bool(re.search(r"[。！？；.!?;」』”）)]$", plain))
+        short_heading = len(plain) <= 22 and not ends_sentence
+        colon_heading = len(plain) <= 42 and plain.endswith(("：", ":"))
+        if short_heading or colon_heading:
+            headings.append(plain.rstrip("：:"))
+            sec_id = f"sec-{len(headings)}"
+            return f'<h2 class="section" id="{sec_id}">{html.escape(plain)}</h2>'
+        return pm.group(0)
+
+    body = re.sub(r"<p>(.*?)</p>", repl, m.group(2), flags=re.S)
+    if headings:
+        links = "".join(
+            f'<a href="#sec-{i}">{html.escape(label)}</a>'
+            for i, label in enumerate(headings, 1))
+        toc = f'<nav class="article-toc" aria-label="本篇目录"><strong>本篇目录</strong>{links}</nav>'
+        body = toc + body
+
+    return s[:m.start(2)] + body + s[m.end(2):]
 
 
 def build_book_page(b: dict, books: list) -> None:
     out_dir = ROOT / "books" / b["slug"]
     out = out_dir / "index.html"
     s = b["html"]
+
+    s = re.sub(r":root\{[^}]+\}", CSS_TOKENS, s, count=1)
+    s = improve_article_reading(s)
 
     # 1) 相对路径上移一层：books/xx.html → books/xxx/index.html
     s = re.sub(r'(href|src)="\.\./', r'\1="../../', s)
@@ -168,6 +250,19 @@ def build_book_page(b: dict, books: list) -> None:
     pager = '<nav class="pager">' + "".join(links) + "</nav>"
 
     if "</article>" in s:
+        scene = BOOK_SCENES.get(b["no"])
+        if scene:
+            slug, year, image, caption = scene
+            scene_block = f"""<aside class="book-scene" aria-label="书边影像">
+  <a href="../../photos/{slug}/"><img src="../../img/countries/{image}" alt="{html.escape(caption)}" loading="lazy" decoding="async"></a>
+  <div>
+    <p class="scene-label">书边影像 · {year} · {slug.split('-')[0].title()}</p>
+    <blockquote>{html.escape(caption)}</blockquote>
+    <p class="scene-note">照片不为这一期作注，只在书页合上以后，留一块外景。</p>
+    <a class="scene-link" href="../../photos/{slug}/">走进这组影像 →</a>
+  </div>
+</aside>"""
+            s = s.replace("</article>", scene_block + "\n</article>", 1)
         s = s.replace("</article>", "</article>\n" + pager, 1)
     else:
         s = s.replace("<footer", pager + "\n<footer", 1)
@@ -194,6 +289,59 @@ a{{color:#a63a2c}}</style>
 </html>
 """
     write(b["path"], page)
+
+
+# 编刊轴用的书目信息。只在目录页显示，不改正文。
+BOOK_META = {
+    0: ("泉森", "一百部书，一百个夜晚的来由。"),
+    1: ("维克多·弗兰克尔", "人在一无所有时，还能守住什么。"),
+    2: ("尤瓦尔·赫拉利", "人如何靠共同想象组织成社会。"),
+    3: ("菲利普·津巴多", "人怎样被说服，又怎样改变自己。"),
+    4: ("钱锺书", "婚姻与人生的进与出。"),
+    5: ("加西亚·马尔克斯", "一个家族在时间里的盛衰与孤独。"),
+    6: ("余华", "一个人怎样承受命运，继续活下去。"),
+    7: ("路遥", "普通人在时代里挣得自己的生活。"),
+    8: ("海明威", "人可以被毁掉，但不能被打败。"),
+    9: ("杨绛", "一家三口相守与失散的记忆。"),
+    10: ("斯蒂芬·金", "在封闭系统里保存自由和希望。"),
+    11: ("简·奥斯汀", "判断如何被偏见遮蔽，又如何被理解修正。"),
+    12: ("玛格丽特·米切尔", "一个女人在崩塌世界里重建生活。"),
+    13: ("陈忠实", "家族、土地和时代变迁。"),
+    14: ("阿尔贝·加缪", "一个人在荒诞世界里的真实与疏离。"),
+    15: ("沈从文", "温柔山水里的人情与命运。"),
+    16: ("艾米莉·勃朗特", "爱与复仇如何越过一代。"),
+    17: ("茅盾", "资本、城市和中国社会转型的截面。"),
+    18: ("艾萨克·阿西莫夫", "机器人三定律的边界与漏洞。"),
+    19: ("刘震云", "人一生都在寻找能说得上话的人。"),
+    20: ("马可·奥勒留", "如何在不可控的世界里安顿自己。"),
+    21: ("大仲马", "冤屈、等待、复仇与宽恕。"),
+    22: ("老舍", "一个普通人被现实一点点碾碎。"),
+    23: ("司汤达", "野心、阶层与爱情。"),
+    24: ("阿来", "土司制度衰亡中的一个“傻子”视角。"),
+    25: ("王小波", "在荒诞时代保存坦荡与自由。"),
+    26: ("东野圭吾", "两段人生在黑暗里彼此照亮又彼此代价。"),
+    27: ("埃里希·玛丽亚·雷马克", "战争如何摧毁一代年轻人。"),
+    28: ("龙应台", "如何陪一个孩子按自己的速度长大。"),
+    29: ("北野武", "母亲与儿子迟到又笨拙的和解。"),
+    30: ("博胡米尔·赫拉巴尔", "一个人在废纸堆里守住自己的世界。"),
+    31: ("八木仁平", "找到那件不由自主就会做的事。"),
+}
+
+# “一期一景”：从现有影像档案里给部分札记配一块书边外景。
+# 照片不负责解释书，只提供读完之后另一种观看的尺度。
+BOOK_SCENES = {
+    0: ("norway-2015", "2015", "norway-03.jpg", "峡湾边的暮色与灯火"),
+    8: ("peru-2026", "2026", "peru-03.jpg", "岩壁上的印加燕鸥"),
+    10: ("norway-2015", "2015", "norway-01.jpg", "通往海边的路"),
+    18: ("kenya-2017", "2017", "kenya-03.jpg", "掠过水面的火烈鸟"),
+    20: ("norway-2015", "2015", "norway-02.jpg", "临水而立的旧木屋"),
+    25: ("peru-2026", "2026", "peru-02.jpg", "浅水中觅食的火烈鸟"),
+    26: ("norway-2015", "2015", "norway-03.jpg", "天色将暗时的峡湾"),
+    27: ("kenya-2017", "2017", "kenya-02.jpg", "草原上的落日"),
+    29: ("colombia-2019", "2019", "colombia-01.jpg", "橙色钟形花前的蜂鸟"),
+    30: ("norway-2015", "2015", "norway-03.jpg", "暮色中的水边人家"),
+    31: ("peru-2026", "2026", "peru-01.jpg", "紫色花穗上的蜂鸟"),
+}
 
 
 # ── 目录页 ───────────────────────────────────────────────────────────
@@ -231,6 +379,20 @@ def build_books_index(books: list) -> None:
         parts.append('</div>')
     listing = "\n".join(parts)
 
+    axis_rows = []
+    for b in sorted(books, key=lambda x: -x["no"]):
+        num = "00" if b["no"] == 0 else f'{b["no"]:02d}'
+        author, note = BOOK_META.get(
+            b["no"], ("泉森", "这篇札记还没有一句话摘要。"))
+        axis_rows.append(
+            f'<a class="axis-row" href="{b["slug"]}/">'
+            f'<span class="axis-no">{num}</span>'
+            f'<span class="axis-main"><strong>{html.escape(b["title"])}</strong>'
+            f'<em>{html.escape(author)}</em></span>'
+            f'<span class="axis-note">{html.escape(note)}</span>'
+            f'<span class="axis-arrow" aria-hidden="true">→</span></a>')
+    axis = "\n".join(axis_rows)
+
     page = f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -242,16 +404,35 @@ def build_books_index(books: list) -> None:
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
 <style>
 {CSS_TOKENS}
-body{{margin:0;background:var(--paper);color:var(--ink);font-family:"Songti SC","Noto Serif CJK SC",serif;line-height:1.9}}
-.wrap{{max-width:980px;margin:0 auto;padding:0 26px}}
-header{{display:flex;justify-content:space-between;padding:30px 0 16px;border-bottom:1px solid var(--line);font-size:13px;letter-spacing:.2em}}
+*{{box-sizing:border-box}}
+body{{margin:0;background:#f7f4ed;color:var(--ink);font-family:"Songti SC","Noto Serif CJK SC",serif;line-height:1.9}}
+.wrap{{width:min(calc(100% - 72px),1080px);margin:0 auto}}
+header{{display:flex;justify-content:space-between;align-items:baseline;padding:34px 0 24px;border-bottom:1px solid var(--line)}}
 header a{{text-decoration:none}}
-h1{{font-size:34px;font-weight:500;margin:46px 0 8px}}
-p.lede{{color:var(--ink-2);font-size:14px;margin:0 0 10px}}
-.progress{{font-size:12px;color:var(--ink-3);letter-spacing:.14em;margin:0 0 34px}}
-.bar{{height:2px;background:var(--line);margin:10px 0 0}}
+header .mark{{color:var(--seal);font-size:22px;letter-spacing:.34em}}
+header nav{{display:flex;gap:28px;font-size:12px;letter-spacing:.18em}}
+header nav a{{color:var(--ink-2)}}
+header nav a:hover,header nav a[aria-current="page"]{{color:var(--seal)}}
+.intro{{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:54px;align-items:end;padding:68px 0 46px}}
+.intro-kicker{{display:flex;align-items:center;gap:12px;margin:0 0 18px;color:var(--ink-3);font-size:11px;letter-spacing:.18em}}
+.intro-kicker::before{{content:"";width:32px;height:1px;background:var(--seal)}}
+h1{{font-size:clamp(36px,5vw,62px);font-weight:500;line-height:1.2;margin:0}}
+p.lede{{color:var(--ink-2);font-size:15px;margin:16px 0 0}}
+.progress{{font-size:11px;color:var(--ink-3);letter-spacing:.14em;margin:0;text-align:right}}
+.progress strong{{display:block;color:var(--ink);font-size:38px;font-weight:500;line-height:1.2;letter-spacing:0;margin-bottom:5px}}
+.bar{{height:2px;background:var(--line);margin:12px 0 0}}
 .bar i{{display:block;height:2px;background:var(--seal);width:{min(published,100)}%}}
-h2.grp{{font-size:12px;letter-spacing:.3em;color:var(--ink-3);font-weight:400;margin:48px 0 14px}}
+.view-input{{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}}
+.view-switch{{display:flex;gap:8px;padding:20px 0 28px;border-top:1px solid var(--line-dark)}}
+.view-switch label{{cursor:pointer;padding:7px 15px;border:1px solid var(--line);font-size:11px;letter-spacing:.14em;color:var(--ink-3);transition:.2s ease}}
+.view-switch label:hover{{border-color:var(--line-dark);color:var(--ink)}}
+#view-covers:checked ~ .view-switch label[for="view-covers"],
+#view-axis:checked ~ .view-switch label[for="view-axis"]{{background:var(--ink);border-color:var(--ink);color:var(--paper)}}
+.view-input:focus-visible ~ .view-switch label{{outline:2px solid var(--seal);outline-offset:3px}}
+#view-axis:checked ~ .views .covers{{display:none}}
+#view-covers:checked ~ .views .axis{{display:none}}
+h2.grp{{display:flex;align-items:center;gap:14px;font-size:11px;letter-spacing:.3em;color:var(--ink-3);font-weight:400;margin:42px 0 14px}}
+h2.grp::after{{content:"";height:1px;flex:1;background:var(--line)}}
 .grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}}
 .book-card{{position:relative;display:block;aspect-ratio:2.35/1;overflow:hidden;
   text-decoration:none;background:#f2efe6}}
@@ -273,22 +454,70 @@ h2.grp{{font-size:12px;letter-spacing:.3em;color:var(--ink-3);font-weight:400;ma
 .book-card.plain .no{{color:var(--ink-3);opacity:1}}
 .book-card.plain h3{{color:var(--ink)}}
 .book-card:hover h3{{color:var(--seal)}}
-header .mark{{color:var(--seal)}}
-footer{{margin:60px 0 70px;font-size:12px;color:var(--ink-3);letter-spacing:.08em}}
+.axis{{border-top:1px solid var(--line-dark)}}
+.axis-intro{{display:grid;grid-template-columns:160px 1fr;gap:32px;padding:24px 0 34px}}
+.axis-intro h2{{margin:0;font-size:23px;font-weight:500}}
+.axis-intro p{{margin:0;max-width:38em;color:var(--ink-2);font-size:13px}}
+.axis-list{{display:grid;grid-template-columns:1fr 1fr;column-gap:54px}}
+.axis-row{{display:grid;grid-template-columns:36px minmax(115px,.75fr) minmax(0,1.25fr) 12px;gap:14px;align-items:baseline;padding:15px 0;border-top:1px solid var(--line);text-decoration:none}}
+.axis-no{{font-size:10px;letter-spacing:.1em;color:var(--ink-3)}}
+.axis-main strong{{display:block;font-size:15px;line-height:1.55;font-weight:500}}
+.axis-main em{{display:block;margin-top:1px;color:var(--ink-3);font-size:10px;font-style:normal;letter-spacing:.05em;line-height:1.55}}
+.axis-note{{color:var(--ink-2);font-size:11px;line-height:1.7}}
+.axis-arrow{{color:var(--ink-3);font-size:11px;transition:transform .2s ease}}
+.axis-row:hover .axis-main strong,.axis-row:hover .axis-arrow{{color:var(--seal)}}
+.axis-row:hover .axis-arrow{{transform:translateX(3px)}}
+footer{{display:flex;justify-content:space-between;gap:20px;margin:64px 0 70px;padding-top:22px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3);letter-spacing:.08em}}
 footer a{{text-decoration:none;border-bottom:1px solid var(--line)}}
 @media (max-width:640px){{
+  .wrap{{width:calc(100% - 40px)}}
+  header nav{{gap:14px;letter-spacing:.08em}}
+  header .mark{{font-size:19px;letter-spacing:.24em}}
+  .intro{{grid-template-columns:1fr;gap:24px;padding:48px 0 34px}}
+  .progress{{text-align:left}}
+  .progress strong{{display:inline;font-size:13px;margin-right:8px}}
+  .axis-intro{{grid-template-columns:1fr;gap:10px}}
+  .axis-list{{grid-template-columns:1fr}}
+  .axis-row{{grid-template-columns:32px 1fr 12px;gap:10px}}
+  .axis-note{{grid-column:2/4;margin-top:-8px}}
   .grid{{grid-template-columns:1fr}}
   .book-card h3{{font-size:17px;right:54px}}
   .book-card .seal{{width:32px;height:32px}}
+  footer{{flex-direction:column;gap:8px}}
 }}
 </style></head><body><div class="wrap">
-<header><span class="mark">半亩方塘</span><a href="../index.html">回到首页</a></header>
-<h1>重温百部名著</h1>
-<p class="lede">一百部书，一百个夜晚。</p>
-<p class="progress">已读 {published} / 100</p>
-<div class="bar"><i></i></div>
-{listing}
-<footer><a href="../index.html">泉森 · 半亩方塘</a> · <a href="../feed.xml">RSS</a></footer>
+<header>
+  <a class="mark" href="../index.html">半亩方塘</a>
+  <nav><a href="index.html" aria-current="page">阅读</a><a href="../photos/index.html">影像</a><a href="../about/index.html">关于</a></nav>
+</header>
+<section class="intro">
+  <div>
+    <p class="intro-kicker">阅读札记</p>
+    <h1>重温百部名著</h1>
+    <p class="lede">一百部书，一百个夜晚。封面是读过的书，编刊轴是走过的路。</p>
+  </div>
+  <div>
+    <p class="progress"><strong>{published} / 100</strong>已读 · 持续编刊中</p>
+    <div class="bar"><i></i></div>
+  </div>
+</section>
+<input class="view-input" type="radio" name="book-view" id="view-covers" checked>
+<input class="view-input" type="radio" name="book-view" id="view-axis">
+<div class="view-switch">
+  <label for="view-covers">封面墙</label>
+  <label for="view-axis">编刊轴</label>
+</div>
+<div class="views">
+  <section class="covers" aria-label="封面墙">{listing}</section>
+  <section class="axis" aria-labelledby="axis-title">
+    <div class="axis-intro">
+      <h2 id="axis-title">编刊轴</h2>
+      <p>按刊期回看。每一条不是书评摘要，而是这一期留下的一个念头；三十一期连在一起，才像一条真正走过的阅读线索。</p>
+    </div>
+    <div class="axis-list">{axis}</div>
+  </section>
+</div>
+<footer><a href="../index.html">泉森 · 半亩方塘</a><span><a href="../feed.xml">RSS</a> · <a href="mailto:quan@dqquan.com">quan@dqquan.com</a></span></footer>
 </div></body></html>
 """
     write(ROOT / "books" / "index.html", page)
@@ -339,6 +568,8 @@ header{{display:flex;justify-content:space-between;padding:30px 0 16px;border-bo
 header a{{text-decoration:none;color:var(--ink-2)}}
 header a:hover{{color:var(--seal)}}
 header .mark{{color:var(--seal)}}
+header nav{{display:flex;gap:26px}}
+header nav a[aria-current="page"]{{color:var(--ink)}}
 .intro{{padding:54px 0 34px;border-bottom:1px solid var(--line)}}
 .year{{font-size:12px;letter-spacing:.24em;color:var(--ink-3);margin:0 0 8px}}
 h1{{font-size:clamp(30px,4.6vw,46px);font-weight:500;margin:0 0 14px;line-height:1.25}}
@@ -358,7 +589,10 @@ footer a{{text-decoration:none;border-bottom:1px solid var(--line)}}
 @media (max-width:820px){{.wrap{{padding:0 20px}}figure.tall img,figure.wide img{{aspect-ratio:auto}}}}
 </style></head>
 <body><div class="wrap">
-<header><a class="mark" href="../../index.html">半亩方塘</a><a href="../">全部国家影像</a></header>
+<header>
+  <a class="mark" href="../../index.html">半亩方塘</a>
+  <nav><a href="../../books/index.html">阅读</a><a href="../" aria-current="page">影像</a><a href="../../about/index.html">关于</a></nav>
+</header>
 <div class="intro">
   <p class="year">{c["year"]}</p>
   <h1>{c["name"]}</h1>
@@ -442,6 +676,41 @@ def build_sitemap(books: list) -> None:
 </urlset>
 """
     write(ROOT / "sitemap.xml", body)
+
+
+def build_feed(books: list) -> None:
+    """RSS 指向站内正文，不再跳到已经和本站脱节的旧公众号链接。"""
+    items = []
+    newest_ts = 0.0
+    for b in sorted(books, key=lambda x: -x["no"]):
+        if b["no"] == 0:
+            continue
+        ts = b["source"].stat().st_mtime
+        newest_ts = max(newest_ts, ts)
+        label = f'第 {b["no"]} 期'
+        url = f"{SITE}/books/{b['slug']}/"
+        items.append(f"""    <item>
+      <title>{html.escape(label)} · {html.escape(b["title"])}</title>
+      <link>{url}</link>
+      <guid isPermaLink="true">{url}</guid>
+      <pubDate>{format_datetime(datetime.fromtimestamp(ts, tz=TZ))}</pubDate>
+      <description>{html.escape(label)} · {html.escape(b["title"])}｜半亩方塘</description>
+    </item>""")
+
+    last_build = datetime.fromtimestamp(newest_ts or datetime.now(timezone.utc).timestamp(), tz=TZ)
+    body = f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>半亩方塘 · 重温百部名著</title>
+    <link>{SITE}/books/</link>
+    <description>一百部书，一百个夜晚。读完一本，说几句话。</description>
+    <language>zh-cn</language>
+    <lastBuildDate>{format_datetime(last_build)}</lastBuildDate>
+{chr(10).join(items)}
+  </channel>
+</rss>
+"""
+    write(ROOT / "feed.xml", body)
 
 
 def build_404() -> None:
@@ -567,6 +836,10 @@ def main():
     if what in ("all", "sitemap"):
         print("\n[sitemap] 全量")
         build_sitemap(books)
+
+    if what in ("all", "feed"):
+        print("\n[RSS] 站内正文")
+        build_feed(books)
 
     print("\n完成。")
 
