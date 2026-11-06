@@ -21,11 +21,14 @@
 *{box-sizing:border-box}
 body{margin:0;background:#f7f4ed;color:var(--ink);font-family:"Songti SC","Noto Serif CJK SC",serif;line-height:1.9}
 .wrap{width:min(calc(100% - 72px),1080px);margin:0 auto}
-header{display:flex;justify-content:space-between;align-items:baseline;padding:34px 0 24px;border-bottom:1px solid var(--line)}
+html{-webkit-text-size-adjust:100%}
+a:focus-visible{outline:2px solid var(--seal);outline-offset:4px}
+img{display:block;max-width:100%}
+header{display:flex;justify-content:space-between;align-items:center;padding:28px 0 18px;border-bottom:1px solid var(--line)}
 header a{text-decoration:none}
 header .mark{color:var(--seal);font-size:22px;letter-spacing:.34em}
 header nav{display:flex;gap:28px;font-size:12px;letter-spacing:.18em}
-header nav a{color:var(--ink-2)}
+header nav a{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;color:var(--ink-2)}
 header nav a:hover,header nav a[aria-current="page"]{color:var(--seal)}
 .intro{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:54px;align-items:end;padding:68px 0 46px}
 .intro-kicker{display:flex;align-items:center;gap:12px;margin:0 0 18px;color:var(--ink-3);font-size:11px;letter-spacing:.18em}
@@ -38,7 +41,7 @@ p.lede{color:var(--ink-2);font-size:15px;margin:16px 0 0}
 .bar i{display:block;height:2px;background:var(--seal);width:31%}
 .view-input{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .view-switch{display:flex;gap:8px;padding:20px 0 28px;border-top:1px solid var(--line-dark)}
-.view-switch label{cursor:pointer;padding:7px 15px;border:1px solid var(--line);font-size:11px;letter-spacing:.14em;color:var(--ink-3);transition:.2s ease}
+.view-switch label{display:inline-flex;align-items:center;justify-content:center;min-height:44px;cursor:pointer;padding:7px 15px;border:1px solid var(--line);font-size:11px;letter-spacing:.14em;color:var(--ink-3);transition:.2s ease}
 .view-switch label:hover{border-color:var(--line-dark);color:var(--ink)}
 #view-covers:checked ~ .view-switch label[for="view-covers"],
 #view-axis:checked ~ .view-switch label[for="view-axis"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
@@ -86,6 +89,7 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line)}
 @media (max-width:640px){
   .wrap{width:calc(100% - 40px)}
   header nav{gap:14px;letter-spacing:.08em}
+  header nav a{font-size:12px}
   header .mark{font-size:19px;letter-spacing:.24em}
   .intro{grid-template-columns:1fr;gap:24px;padding:48px 0 34px}
   .progress{text-align:left}
@@ -94,15 +98,18 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line)}
   .axis-list{grid-template-columns:1fr}
   .axis-row{grid-template-columns:32px 1fr 12px;gap:10px}
   .axis-note{grid-column:2/4;margin-top:-8px}
+  .axis-note{font-size:12px;line-height:1.75}
+  .axis-main em,.axis-no{font-size:11px}
   .grid{grid-template-columns:1fr}
   .book-card h3{font-size:17px;right:54px}
   .book-card .seal{width:32px;height:32px}
   footer{flex-direction:column;gap:8px}
+  footer a{display:inline-flex;align-items:center;min-height:44px}
 }
 </style></head><body><div class="wrap">
 <header>
   <a class="mark" href="../index.html">半亩方塘</a>
-  <nav><a href="index.html" aria-current="page">阅读</a><a href="../photos/index.html">影像</a><a href="../about/index.html">关于</a></nav>
+  <nav aria-label="主导航"><a href="index.html" aria-current="page">阅读</a><a href="../photos/index.html">影像</a><a href="../about/index.html">关于</a></nav>
 </header>
 <section class="intro">
   <div>
@@ -123,46 +130,46 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line)}
 </div>
 <div class="views">
   <section class="covers" aria-label="封面墙"><h2 class="grp">31 — 40</h2><div class="grid">
-<a class="book-card baked" href="031/"><img class="cover" src="../img/covers/b31.webp" alt="世界最简单的才能发现法"></a>
+<a class="book-card baked" href="031/"><img class="cover" src="../img/covers/b31.webp" alt="世界最简单的才能发现法" width="1400" height="595" loading="eager" decoding="async"></a>
 </div>
 <h2 class="grp">21 — 30</h2><div class="grid">
-<a class="book-card baked" href="030/"><img class="cover" src="../img/covers/b30.webp" alt="过于喧嚣的孤独"></a>
-<a class="book-card baked" href="029/"><img class="cover" src="../img/covers/b29.webp" alt="菊次郎与佐纪"></a>
-<a class="book-card baked" href="028/"><img class="cover" src="../img/covers/b28.webp" alt="孩子你慢慢来"></a>
-<a class="book-card baked" href="027/"><img class="cover" src="../img/covers/b27.webp" alt="西线无战事"></a>
-<a class="book-card baked" href="026/"><img class="cover" src="../img/covers/b26.webp" alt="白夜行"></a>
-<a class="book-card baked" href="025/"><img class="cover" src="../img/covers/b25.webp" alt="黄金时代"></a>
-<a class="book-card baked" href="024/"><img class="cover" src="../img/covers/b24.webp" alt="尘埃落定"></a>
-<a class="book-card baked" href="023/"><img class="cover" src="../img/covers/b23.webp" alt="红与黑"></a>
-<a class="book-card baked" href="022/"><img class="cover" src="../img/covers/b22.webp" alt="骆驼祥子"></a>
-<a class="book-card baked" href="021/"><img class="cover" src="../img/covers/b21.webp" alt="基督山伯爵"></a>
+<a class="book-card baked" href="030/"><img class="cover" src="../img/covers/b30.webp" alt="过于喧嚣的孤独" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="029/"><img class="cover" src="../img/covers/b29.webp" alt="菊次郎与佐纪" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="028/"><img class="cover" src="../img/covers/b28.webp" alt="孩子你慢慢来" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="027/"><img class="cover" src="../img/covers/b27.webp" alt="西线无战事" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="026/"><img class="cover" src="../img/covers/b26.webp" alt="白夜行" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="025/"><img class="cover" src="../img/covers/b25.webp" alt="黄金时代" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="024/"><img class="cover" src="../img/covers/b24.webp" alt="尘埃落定" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="023/"><img class="cover" src="../img/covers/b23.webp" alt="红与黑" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="022/"><img class="cover" src="../img/covers/b22.webp" alt="骆驼祥子" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="021/"><img class="cover" src="../img/covers/b21.webp" alt="基督山伯爵" width="1400" height="595" loading="lazy" decoding="async"></a>
 </div>
 <h2 class="grp">11 — 20</h2><div class="grid">
-<a class="book-card baked" href="020/"><img class="cover" src="../img/covers/b20.webp" alt="沉思录"></a>
-<a class="book-card baked" href="019/"><img class="cover" src="../img/covers/b19.webp" alt="一句顶一万句"></a>
-<a class="book-card baked" href="018/"><img class="cover" src="../img/covers/b18.webp" alt="我，机器人"></a>
-<a class="book-card baked" href="017/"><img class="cover" src="../img/covers/b17.webp" alt="子夜"></a>
-<a class="book-card baked" href="016/"><img class="cover" src="../img/covers/b16.webp" alt="呼啸山庄"></a>
-<a class="book-card baked" href="015/"><img class="cover" src="../img/covers/b15.webp" alt="边城"></a>
-<a class="book-card baked" href="014/"><img class="cover" src="../img/covers/b14.webp" alt="局外人"></a>
-<a class="book-card baked" href="013/"><img class="cover" src="../img/covers/b13.webp" alt="白鹿原"></a>
-<a class="book-card baked" href="012/"><img class="cover" src="../img/covers/b12.webp" alt="乱世佳人"></a>
-<a class="book-card baked" href="011/"><img class="cover" src="../img/covers/b11.webp" alt="傲慢与偏见"></a>
+<a class="book-card baked" href="020/"><img class="cover" src="../img/covers/b20.webp" alt="沉思录" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="019/"><img class="cover" src="../img/covers/b19.webp" alt="一句顶一万句" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="018/"><img class="cover" src="../img/covers/b18.webp" alt="我，机器人" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="017/"><img class="cover" src="../img/covers/b17.webp" alt="子夜" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="016/"><img class="cover" src="../img/covers/b16.webp" alt="呼啸山庄" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="015/"><img class="cover" src="../img/covers/b15.webp" alt="边城" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="014/"><img class="cover" src="../img/covers/b14.webp" alt="局外人" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="013/"><img class="cover" src="../img/covers/b13.webp" alt="白鹿原" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="012/"><img class="cover" src="../img/covers/b12.webp" alt="乱世佳人" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="011/"><img class="cover" src="../img/covers/b11.webp" alt="傲慢与偏见" width="1400" height="595" loading="lazy" decoding="async"></a>
 </div>
 <h2 class="grp">01 — 10</h2><div class="grid">
-<a class="book-card baked" href="010/"><img class="cover" src="../img/covers/b10.webp" alt="肖申克的救赎"></a>
-<a class="book-card baked" href="009/"><img class="cover" src="../img/covers/b09.webp" alt="我们仨"></a>
-<a class="book-card baked" href="008/"><img class="cover" src="../img/covers/b08.webp" alt="老人与海"></a>
-<a class="book-card baked" href="007/"><img class="cover" src="../img/covers/b07.webp" alt="平凡的世界"></a>
-<a class="book-card baked" href="006/"><img class="cover" src="../img/covers/b06.webp" alt="活着"></a>
-<a class="book-card baked" href="005/"><img class="cover" src="../img/covers/b05.webp" alt="百年孤独"></a>
-<a class="book-card baked" href="004/"><img class="cover" src="../img/covers/b04.webp" alt="围城"></a>
-<a class="book-card baked" href="003/"><img class="cover" src="../img/covers/b03.webp" alt="态度改变与社会影响"></a>
-<a class="book-card baked" href="002/"><img class="cover" src="../img/covers/b02.webp" alt="人类简史"></a>
-<a class="book-card baked" href="001/"><img class="cover" src="../img/covers/b01.webp" alt="活出生命的意义"></a>
+<a class="book-card baked" href="010/"><img class="cover" src="../img/covers/b10.webp" alt="肖申克的救赎" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="009/"><img class="cover" src="../img/covers/b09.webp" alt="我们仨" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="008/"><img class="cover" src="../img/covers/b08.webp" alt="老人与海" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="007/"><img class="cover" src="../img/covers/b07.webp" alt="平凡的世界" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="006/"><img class="cover" src="../img/covers/b06.webp" alt="活着" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="005/"><img class="cover" src="../img/covers/b05.webp" alt="百年孤独" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="004/"><img class="cover" src="../img/covers/b04.webp" alt="围城" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="003/"><img class="cover" src="../img/covers/b03.webp" alt="态度改变与社会影响" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="002/"><img class="cover" src="../img/covers/b02.webp" alt="人类简史" width="1400" height="595" loading="lazy" decoding="async"></a>
+<a class="book-card baked" href="001/"><img class="cover" src="../img/covers/b01.webp" alt="活出生命的意义" width="1400" height="595" loading="lazy" decoding="async"></a>
 </div>
 <h2 class="grp">开卷</h2><div class="grid">
-<a class="book-card baked" href="000/"><img class="cover" src="../img/covers/b00.webp" alt="序"></a>
+<a class="book-card baked" href="000/"><img class="cover" src="../img/covers/b00.webp" alt="序" width="1400" height="595" loading="lazy" decoding="async"></a>
 </div></section>
   <section class="axis" aria-labelledby="axis-title">
     <div class="axis-intro">

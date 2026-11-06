@@ -51,6 +51,17 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line)}
     .book-scene img{aspect-ratio:5/4}
     .pager{flex-direction:column;gap:14px}.pager .next{margin-left:0;text-align:left}
   }
+
+  a:focus-visible{outline:2px solid var(--seal);outline-offset:4px}
+  header nav{display:flex;align-items:center;gap:22px}
+  header nav a{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;letter-spacing:.12em}
+  header nav a[aria-current="page"]{color:var(--seal)}
+  @media (max-width:640px){
+    header{align-items:center}
+    header nav{gap:10px}
+    header nav a{font-size:11px;letter-spacing:.06em}
+    footer a{display:inline-flex;align-items:center;min-height:44px}
+  }
 </style><meta name="description" content="半亩方塘 · 开卷">
 <meta property="og:site_name" content="半亩方塘">
 <meta property="og:type" content="article">
@@ -62,7 +73,7 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line)}
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://dqquan.com/books/000/">
 </head><body><div class="wrap">
-<header><span class="mark">半亩方塘</span><a href="../../index.html">回到首页</a></header>
+<header><a class="mark" href="../../index.html">半亩方塘</a><nav aria-label="主导航"><a href="../../books/index.html" aria-current="page">阅读</a><a href="../../photos/index.html">影像</a><a href="../../about/index.html">关于</a></nav></header>
 <h1>序</h1>
 <div class="meta">第 00 期</div>
 

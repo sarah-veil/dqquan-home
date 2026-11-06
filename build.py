@@ -65,6 +65,19 @@ BAKED_COVER = set(range(2, 23)) | {26, 27, 28, 29}
 
 CSS_TOKENS = """:root{--paper:#f7f4ed;--ink:#201f1b;--ink-2:#5f5b53;--ink-3:#6f685f;--line:#d7d0c2;--line-dark:#b9b0a1;--seal:#9b3227}"""
 
+ARTICLE_NAV_CSS = """
+  a:focus-visible{outline:2px solid var(--seal);outline-offset:4px}
+  header nav{display:flex;align-items:center;gap:22px}
+  header nav a{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;letter-spacing:.12em}
+  header nav a[aria-current="page"]{color:var(--seal)}
+  @media (max-width:640px){
+    header{align-items:center}
+    header nav{gap:10px}
+    header nav a{font-size:11px;letter-spacing:.06em}
+    footer a{display:inline-flex;align-items:center;min-height:44px}
+  }
+"""
+
 
 def rel(path: Path) -> str:
     return path.relative_to(ROOT).as_posix()
@@ -230,7 +243,19 @@ def build_book_page(b: dict, books: list) -> None:
 
     # 3) 翻页样式
     if "</style>" in s:
-        s = s.replace("</style>", PAGER_CSS + "</style>", 1)
+        s = s.replace("</style>", PAGER_CSS + ARTICLE_NAV_CSS + "</style>", 1)
+
+    # 统一正文页导航：进入任一篇文章后仍可直接去阅读、影像和关于。
+    s = re.sub(
+        r'<header>\s*<span class="mark">半亩方塘</span>\s*'
+        r'<a href="(?:\.\./)+index\.html">回到首页</a>\s*</header>',
+        '<header><a class="mark" href="../../index.html">半亩方塘</a>'
+        '<nav aria-label="主导航"><a href="../../books/index.html" aria-current="page">阅读</a>'
+        '<a href="../../photos/index.html">影像</a>'
+        '<a href="../../about/index.html">关于</a></nav></header>',
+        s,
+        count=1,
+    )
 
     # 4) 上一期 / 下一期
     idx = books.index(b)
@@ -360,6 +385,7 @@ def build_books_index(books: list) -> None:
         return f"{lo:02d} — {hi:02d}"
 
     parts = []
+    newest_no = max((b["no"] for b in books), default=0)
     for k in sorted(groups, reverse=True):
         parts.append(f'<h2 class="grp">{group_title(k)}</h2><div class="grid">')
         for b in sorted(groups[k], key=lambda x: -x["no"]):
@@ -368,9 +394,11 @@ def build_books_index(books: list) -> None:
             title = html.escape(b["title"])
             if cover.exists():
                 # 所有期统一走「成版封面」：图上已带三行抬头、书名、期号与同一枚朱红印
+                loading = "eager" if b["no"] == newest_no else "lazy"
                 parts.append(
                     f'<a class="book-card baked" href="{b["slug"]}/">'
-                    f'<img class="cover" src="../img/covers/b{b["no"]:02d}.webp" alt="{title}"></a>')
+                    f'<img class="cover" src="../img/covers/b{b["no"]:02d}.webp" '
+                    f'alt="{title}" width="1400" height="595" loading="{loading}" decoding="async"></a>')
             else:
                 parts.append(
                     f'<a class="book-card plain" data-no="{num}" href="{b["slug"]}/">'
@@ -407,11 +435,14 @@ def build_books_index(books: list) -> None:
 *{{box-sizing:border-box}}
 body{{margin:0;background:#f7f4ed;color:var(--ink);font-family:"Songti SC","Noto Serif CJK SC",serif;line-height:1.9}}
 .wrap{{width:min(calc(100% - 72px),1080px);margin:0 auto}}
-header{{display:flex;justify-content:space-between;align-items:baseline;padding:34px 0 24px;border-bottom:1px solid var(--line)}}
+html{{-webkit-text-size-adjust:100%}}
+a:focus-visible{{outline:2px solid var(--seal);outline-offset:4px}}
+img{{display:block;max-width:100%}}
+header{{display:flex;justify-content:space-between;align-items:center;padding:28px 0 18px;border-bottom:1px solid var(--line)}}
 header a{{text-decoration:none}}
 header .mark{{color:var(--seal);font-size:22px;letter-spacing:.34em}}
 header nav{{display:flex;gap:28px;font-size:12px;letter-spacing:.18em}}
-header nav a{{color:var(--ink-2)}}
+header nav a{{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;color:var(--ink-2)}}
 header nav a:hover,header nav a[aria-current="page"]{{color:var(--seal)}}
 .intro{{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:54px;align-items:end;padding:68px 0 46px}}
 .intro-kicker{{display:flex;align-items:center;gap:12px;margin:0 0 18px;color:var(--ink-3);font-size:11px;letter-spacing:.18em}}
@@ -424,7 +455,7 @@ p.lede{{color:var(--ink-2);font-size:15px;margin:16px 0 0}}
 .bar i{{display:block;height:2px;background:var(--seal);width:{min(published,100)}%}}
 .view-input{{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}}
 .view-switch{{display:flex;gap:8px;padding:20px 0 28px;border-top:1px solid var(--line-dark)}}
-.view-switch label{{cursor:pointer;padding:7px 15px;border:1px solid var(--line);font-size:11px;letter-spacing:.14em;color:var(--ink-3);transition:.2s ease}}
+.view-switch label{{display:inline-flex;align-items:center;justify-content:center;min-height:44px;cursor:pointer;padding:7px 15px;border:1px solid var(--line);font-size:11px;letter-spacing:.14em;color:var(--ink-3);transition:.2s ease}}
 .view-switch label:hover{{border-color:var(--line-dark);color:var(--ink)}}
 #view-covers:checked ~ .view-switch label[for="view-covers"],
 #view-axis:checked ~ .view-switch label[for="view-axis"]{{background:var(--ink);border-color:var(--ink);color:var(--paper)}}
@@ -472,6 +503,7 @@ footer a{{text-decoration:none;border-bottom:1px solid var(--line)}}
 @media (max-width:640px){{
   .wrap{{width:calc(100% - 40px)}}
   header nav{{gap:14px;letter-spacing:.08em}}
+  header nav a{{font-size:12px}}
   header .mark{{font-size:19px;letter-spacing:.24em}}
   .intro{{grid-template-columns:1fr;gap:24px;padding:48px 0 34px}}
   .progress{{text-align:left}}
@@ -480,15 +512,18 @@ footer a{{text-decoration:none;border-bottom:1px solid var(--line)}}
   .axis-list{{grid-template-columns:1fr}}
   .axis-row{{grid-template-columns:32px 1fr 12px;gap:10px}}
   .axis-note{{grid-column:2/4;margin-top:-8px}}
+  .axis-note{{font-size:12px;line-height:1.75}}
+  .axis-main em,.axis-no{{font-size:11px}}
   .grid{{grid-template-columns:1fr}}
   .book-card h3{{font-size:17px;right:54px}}
   .book-card .seal{{width:32px;height:32px}}
   footer{{flex-direction:column;gap:8px}}
+  footer a{{display:inline-flex;align-items:center;min-height:44px}}
 }}
 </style></head><body><div class="wrap">
 <header>
   <a class="mark" href="../index.html">半亩方塘</a>
-  <nav><a href="index.html" aria-current="page">阅读</a><a href="../photos/index.html">影像</a><a href="../about/index.html">关于</a></nav>
+  <nav aria-label="主导航"><a href="index.html" aria-current="page">阅读</a><a href="../photos/index.html">影像</a><a href="../about/index.html">关于</a></nav>
 </header>
 <section class="intro">
   <div>
@@ -564,11 +599,14 @@ def photo_page(c: dict, prev_c, next_c) -> str:
 *{{box-sizing:border-box}}
 body{{margin:0;background:var(--paper);color:var(--ink);font-family:"Songti SC","Noto Serif CJK SC",serif;line-height:1.9}}
 .wrap{{max-width:860px;margin:0 auto;padding:0 26px}}
-header{{display:flex;justify-content:space-between;padding:30px 0 16px;border-bottom:1px solid var(--line);font-size:13px;letter-spacing:.2em}}
+html{{-webkit-text-size-adjust:100%}}
+a:focus-visible{{outline:2px solid var(--seal);outline-offset:4px}}
+header{{display:flex;justify-content:space-between;align-items:center;padding:24px 0 12px;border-bottom:1px solid var(--line);font-size:13px;letter-spacing:.2em}}
 header a{{text-decoration:none;color:var(--ink-2)}}
 header a:hover{{color:var(--seal)}}
 header .mark{{color:var(--seal)}}
 header nav{{display:flex;gap:26px}}
+header nav a{{display:inline-flex;align-items:center;min-height:44px}}
 header nav a[aria-current="page"]{{color:var(--ink)}}
 .intro{{padding:54px 0 34px;border-bottom:1px solid var(--line)}}
 .year{{font-size:12px;letter-spacing:.24em;color:var(--ink-3);margin:0 0 8px}}
@@ -581,17 +619,22 @@ figure.tall img{{aspect-ratio:4/5;object-fit:cover}}
 figure.wide img{{aspect-ratio:3/2;object-fit:cover}}
 figcaption{{font-size:12px;color:var(--ink-3);letter-spacing:.06em;margin-top:10px}}
 .pager{{display:flex;justify-content:space-between;gap:24px;padding:22px 0 0;border-top:1px solid var(--line);font-size:13px}}
-.pager a{{text-decoration:none;color:var(--ink-2)}}
+.pager a{{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;color:var(--ink-2)}}
 .pager a:hover{{color:var(--seal)}}
 .pager .next{{margin-left:auto}}
 footer{{margin:56px 0 70px;font-size:12px;color:var(--ink-3);letter-spacing:.08em}}
 footer a{{text-decoration:none;border-bottom:1px solid var(--line)}}
-@media (max-width:820px){{.wrap{{padding:0 20px}}figure.tall img,figure.wide img{{aspect-ratio:auto}}}}
+@media (max-width:820px){{
+  .wrap{{padding:0 20px}}
+  header nav{{gap:12px;letter-spacing:.1em}}
+  figure.tall img,figure.wide img{{aspect-ratio:auto}}
+  footer a{{display:inline-flex;align-items:center;min-height:44px}}
+}}
 </style></head>
 <body><div class="wrap">
 <header>
   <a class="mark" href="../../index.html">半亩方塘</a>
-  <nav><a href="../../books/index.html">阅读</a><a href="../" aria-current="page">影像</a><a href="../../about/index.html">关于</a></nav>
+  <nav aria-label="主导航"><a href="../../books/index.html">阅读</a><a href="../" aria-current="page">影像</a><a href="../../about/index.html">关于</a></nav>
 </header>
 <div class="intro">
   <p class="year">{c["year"]}</p>
