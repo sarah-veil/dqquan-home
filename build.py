@@ -17,7 +17,10 @@ dqquan.com 站点构建脚本
 import os
 import re
 import sys
+import json
 import html
+import shutil
+import subprocess
 from pathlib import Path
 from datetime import datetime, timezone
 from email.utils import format_datetime
@@ -27,6 +30,11 @@ SITE = "https://dqquan.com"
 TZ = timezone.utc
 
 OG_IMAGE = f"{SITE}/img/photo-3.jpg"
+SERIF_STACK = '"Songti SC","Noto Serif CJK SC","Source Han Serif SC","Noto Serif SC","STSong",serif'
+COVER_WIDTH = 1400
+COVER_HEIGHT = 595
+COVER_SMALL_WIDTH = 640
+COVER_SMALL_HEIGHT = 272
 
 # ── 国家相册数据（图注取自 photos/index.html 现有内容）────────────────
 COUNTRIES = [
@@ -131,17 +139,49 @@ OG_BLOCK = """<meta name="description" content="{desc}">
 <link rel="canonical" href="{url}">
 """
 
+
+def schema_tag(kind: str, data) -> str:
+    payload = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
+    return (
+        f'<script type="application/ld+json" data-schema="{kind}">'
+        f"{payload}</script>"
+    )
+
+
+def add_head_metadata(s: str, feed_href: str, schema_kind: str = "", schema_data=None) -> str:
+    """幂等补 RSS 自动发现和页面结构化数据。"""
+    if 'type="application/rss+xml"' not in s:
+        feed = (
+            f'<link rel="alternate" type="application/rss+xml" '
+            f'title="半亩方塘 · 重温百部名著" href="{feed_href}">'
+        )
+        s = s.replace("</head>", feed + "\n</head>", 1)
+
+    if schema_kind and schema_data is not None:
+        marker = f'data-schema="{schema_kind}"'
+        tag = schema_tag(schema_kind, schema_data)
+        pattern = re.compile(
+            rf'<script type="application/ld\+json" {re.escape(marker)}>.*?</script>',
+            flags=re.S,
+        )
+        if pattern.search(s):
+            s = pattern.sub(tag, s, count=1)
+        else:
+            s = s.replace("</head>", tag + "\n</head>", 1)
+    return s
+
 PAGER_CSS = """
   article h2.section{font-size:23px;line-height:1.5;font-weight:500;margin:52px 0 18px;
     padding-top:20px;border-top:1px solid var(--line);letter-spacing:.01em}
   article p.aside{margin:30px 0;padding:19px 22px;border-left:2px solid var(--seal);
     background:rgba(155,50,39,.045);color:var(--ink);font-size:18px!important;line-height:1.8}
-  .article-toc{margin:0 0 34px;padding:18px 0 20px;border-top:1px solid var(--line);
+  .article-toc{margin:0 0 34px;padding:14px 0 16px;border-top:1px solid var(--line);
     border-bottom:1px solid var(--line)}
-  .article-toc strong{display:block;margin-bottom:8px;color:var(--ink-3);
+  .article-toc strong{display:block;margin:0 0 6px;color:var(--ink-3);
     font-size:10px;font-weight:400;letter-spacing:.2em}
-  .article-toc a{display:inline-block;margin:3px 18px 3px 0;color:var(--ink-2);
-    font-size:12px;line-height:1.7;text-decoration:none}
+  .article-toc a{display:flex;align-items:center;min-height:40px;padding:6px 0;color:var(--ink-2);
+    font-size:14px;line-height:1.55;text-decoration:none;border-top:1px solid rgba(215,208,194,.62)}
+  .article-toc a.toc-sub{padding-left:18px;font-size:13px;color:var(--ink-3)}
   .article-toc a:hover{color:var(--seal)}
   .book-scene{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:28px;
     align-items:center;margin:58px 0 8px;padding:26px 0;border-top:1px solid var(--line-dark);
@@ -162,7 +202,8 @@ PAGER_CSS = """
   @media (max-width:640px){
     article h2.section{font-size:21px;margin-top:42px}
     article p.aside{font-size:17px!important;padding:16px 18px}
-    .article-toc a{display:block;margin-right:0}
+    .article-toc a{min-height:44px;padding-top:8px;padding-bottom:8px}
+    .article-toc a.toc-sub{padding-left:16px}
     .book-scene{grid-template-columns:1fr;gap:18px}
     .book-scene img{aspect-ratio:5/4}
     .pager{flex-direction:column;gap:14px}.pager .next{margin-left:0;text-align:left}
@@ -210,9 +251,14 @@ def improve_article_reading(s: str) -> str:
 
     body = re.sub(r"<p>(.*?)</p>", repl, m.group(2), flags=re.S)
     if headings:
-        links = "".join(
-            f'<a href="#sec-{i}">{html.escape(label)}</a>'
-            for i, label in enumerate(headings, 1))
+        links = []
+        for i, label in enumerate(headings, 1):
+            sub = bool(re.match(r"^第[一二三四五六七八九十百]+(?:句|处|条)", label))
+            cls = ' class="toc-sub"' if sub else ""
+            links.append(
+                f'<a{cls} href="#sec-{i}">{html.escape(label)}</a>'
+            )
+        links = "".join(links)
         toc = f'<nav class="article-toc" aria-label="本篇目录"><strong>本篇目录</strong>{links}</nav>'
         body = toc + body
 
@@ -225,6 +271,8 @@ def build_book_page(b: dict, books: list) -> None:
     s = b["html"]
 
     s = re.sub(r":root\{[^}]+\}", CSS_TOKENS, s, count=1)
+    s = s.replace('"Songti SC","Noto Serif CJK SC","STSong",serif', SERIF_STACK)
+    s = s.replace('"Songti SC","Noto Serif CJK SC",serif', SERIF_STACK)
     s = improve_article_reading(s)
 
     # 1) 相对路径上移一层：books/xx.html → books/xxx/index.html
@@ -240,6 +288,31 @@ def build_book_page(b: dict, books: list) -> None:
         s = s.replace("</head>", og + "</head>", 1)
     else:
         s = s.replace("</style></head>", "</style>" + og + "</head>", 1)
+
+    author = BOOK_META.get(b["no"], ("泉森", ""))[0]
+    book_schema = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "Article",
+                "headline": f"{label} · {b['title']}",
+                "description": desc,
+                "url": url,
+                "mainEntityOfPage": url,
+                "inLanguage": "zh-CN",
+                "author": {"@type": "Person", "name": "泉森"},
+                "publisher": {"@type": "Person", "name": "泉森"},
+                "about": {"@id": f"{url}#book"},
+            },
+            {
+                "@type": "Book",
+                "@id": f"{url}#book",
+                "name": b["title"],
+                "author": {"@type": "Person", "name": author},
+            },
+        ],
+    }
+    s = add_head_metadata(s, "../../feed.xml", "book-article", book_schema)
 
     # 3) 翻页样式
     if "</style>" in s:
@@ -279,7 +352,7 @@ def build_book_page(b: dict, books: list) -> None:
         if scene:
             slug, year, image, caption = scene
             scene_block = f"""<aside class="book-scene" aria-label="书边影像">
-  <a href="../../photos/{slug}/"><img src="../../img/countries/{image}" alt="{html.escape(caption)}" loading="lazy" decoding="async"></a>
+  <a href="../../photos/{slug}/"><img src="../../img/countries/{image}" alt="{html.escape(caption)}" width="800" height="1000" loading="lazy" decoding="async"></a>
   <div>
     <p class="scene-label">书边影像 · {year} · {slug.split('-')[0].title()}</p>
     <blockquote>{html.escape(caption)}</blockquote>
@@ -369,8 +442,35 @@ BOOK_SCENES = {
 }
 
 
+def ensure_cover_variants(books: list) -> None:
+    """生成手机用 640px 封面；cwebp 不可用时保留原图回退。"""
+    if not shutil.which("cwebp"):
+        return
+    for b in books:
+        src = ROOT / "img" / "covers" / f'b{b["no"]:02d}.webp'
+        dst = ROOT / "img" / "covers" / f'b{b["no"]:02d}-{COVER_SMALL_WIDTH}.webp'
+        if not src.exists():
+            continue
+        if dst.exists() and dst.stat().st_mtime >= src.stat().st_mtime:
+            continue
+        subprocess.run(
+            [
+                "cwebp",
+                "-quiet",
+                "-resize",
+                str(COVER_SMALL_WIDTH),
+                "0",
+                str(src),
+                "-o",
+                str(dst),
+            ],
+            check=True,
+        )
+
+
 # ── 目录页 ───────────────────────────────────────────────────────────
 def build_books_index(books: list) -> None:
+    ensure_cover_variants(books)
     published = len([b for b in books if b["no"] > 0])
     groups = {}
     for b in books:
@@ -391,14 +491,29 @@ def build_books_index(books: list) -> None:
         for b in sorted(groups[k], key=lambda x: -x["no"]):
             num = "序" if b["no"] == 0 else f'{b["no"]:02d}'
             cover = ROOT / "img" / "covers" / f'b{b["no"]:02d}.webp'
+            cover_small = ROOT / "img" / "covers" / f'b{b["no"]:02d}-{COVER_SMALL_WIDTH}.webp'
             title = html.escape(b["title"])
             if cover.exists():
                 # 所有期统一走「成版封面」：图上已带三行抬头、书名、期号与同一枚朱红印
                 loading = "eager" if b["no"] == newest_no else "lazy"
+                responsive = ""
+                fallback = f'../img/covers/b{b["no"]:02d}.webp'
+                if cover_small.exists():
+                    responsive = (
+                        f' srcset="../img/covers/b{b["no"]:02d}.webp {COVER_WIDTH}w, '
+                        f'../img/covers/b{b["no"]:02d}-{COVER_SMALL_WIDTH}.webp '
+                        f'{COVER_SMALL_WIDTH}w"'
+                        ' sizes="(max-width:640px) calc(100vw - 40px), '
+                        '(max-width:1080px) calc((100vw - 96px) / 2), 516px"'
+                    )
+                    fallback = (
+                        f'../img/covers/b{b["no"]:02d}-{COVER_SMALL_WIDTH}.webp'
+                    )
                 parts.append(
                     f'<a class="book-card baked" href="{b["slug"]}/">'
-                    f'<img class="cover" src="../img/covers/b{b["no"]:02d}.webp" '
-                    f'alt="{title}" width="1400" height="595" loading="{loading}" decoding="async"></a>')
+                    f'<img class="cover" src="{fallback}"{responsive} '
+                    f'alt="{title}" width="{COVER_WIDTH}" height="{COVER_HEIGHT}" '
+                    f'loading="{loading}" decoding="async"></a>')
             else:
                 parts.append(
                     f'<a class="book-card plain" data-no="{num}" href="{b["slug"]}/">'
@@ -421,6 +536,33 @@ def build_books_index(books: list) -> None:
             f'<span class="axis-arrow" aria-hidden="true">→</span></a>')
     axis = "\n".join(axis_rows)
 
+    collection_schema = {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "重温百部名著",
+        "url": f"{SITE}/books/",
+        "description": f"半亩方塘阅读札记，已读 {published} 期。",
+        "inLanguage": "zh-CN",
+        "isPartOf": {"@type": "WebSite", "name": "半亩方塘", "url": f"{SITE}/"},
+        "mainEntity": {
+            "@type": "ItemList",
+            "numberOfItems": len([b for b in books if b["no"] > 0]),
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": i,
+                    "url": f"{SITE}/books/{b['slug']}/",
+                    "name": b["title"],
+                }
+                for i, b in enumerate(
+                    sorted((b for b in books if b["no"] > 0),
+                           key=lambda x: -x["no"]),
+                    1,
+                )
+            ],
+        },
+    }
+
     page = f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -429,11 +571,13 @@ def build_books_index(books: list) -> None:
 <title>重温百部名著 · 半亩方塘</title>
 {OG_BLOCK.format(desc=f"已读 {published} 期 · 一百部书，一百个夜晚。", ogtype="website",
                 title="重温百部名著 · 半亩方塘", url=f"{SITE}/books/", image=OG_IMAGE)}
+{schema_tag("books-collection", collection_schema)}
+<link rel="alternate" type="application/rss+xml" title="半亩方塘 · 重温百部名著" href="../feed.xml">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
 <style>
 {CSS_TOKENS}
 *{{box-sizing:border-box}}
-body{{margin:0;background:#f7f4ed;color:var(--ink);font-family:"Songti SC","Noto Serif CJK SC",serif;line-height:1.9}}
+body{{margin:0;background:#f7f4ed;color:var(--ink);font-family:{SERIF_STACK};line-height:1.9}}
 .wrap{{width:min(calc(100% - 72px),1080px);margin:0 auto}}
 html{{-webkit-text-size-adjust:100%}}
 a:focus-visible{{outline:2px solid var(--seal);outline-offset:4px}}
@@ -563,6 +707,7 @@ def photo_page(c: dict, prev_c, next_c) -> str:
     figs = []
     for fn, cap, ratio in c["photos"]:
         stem = fn.rsplit(".", 1)[0]
+        width, height = (800, 1000) if ratio == "tall" else (1200, 800)
         # 两档：800w / 1600w（图未生成时浏览器回落原图）
         srcset = (f'../../img/countries/w800/{stem}.webp 800w, '
                   f'../../img/countries/w1600/{stem}.webp 1600w')
@@ -570,6 +715,7 @@ def photo_page(c: dict, prev_c, next_c) -> str:
         <a href="../../img/countries/{fn}" target="_blank" rel="noopener">
           <img loading="lazy" src="../../img/countries/{fn}"
                srcset="{srcset}" sizes="(max-width:820px) 92vw, 720px"
+               width="{width}" height="{height}"
                alt="{html.escape(cap)}">
         </a>
         <figcaption>{html.escape(cap)}</figcaption>
@@ -587,17 +733,29 @@ def photo_page(c: dict, prev_c, next_c) -> str:
         nav.append('<a class="next" href="../">全部国家影像 →</a>')
 
     url = f"{SITE}/photos/{c['slug']}/"
+    gallery_schema = {
+        "@context": "https://schema.org",
+        "@type": "ImageGallery",
+        "name": f"{c['name']} · {c['year']}",
+        "description": c["lead"],
+        "url": url,
+        "inLanguage": "zh-CN",
+        "author": {"@type": "Person", "name": "泉森"},
+        "image": [f"{SITE}/img/countries/{fn}" for fn, _, _ in c["photos"]],
+    }
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 {OG_BLOCK.format(desc=c["lead"], ogtype="article", title=f'{c["name"]} · {c["year"]} · 半亩方塘', url=url, image=f"{SITE}/img/countries/{c['photos'][0][0]}")}
+{schema_tag("photo-gallery", gallery_schema)}
+<link rel="alternate" type="application/rss+xml" title="半亩方塘 · 重温百部名著" href="../../feed.xml">
 <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png">
 <style>
 {CSS_TOKENS}
 *{{box-sizing:border-box}}
-body{{margin:0;background:var(--paper);color:var(--ink);font-family:"Songti SC","Noto Serif CJK SC",serif;line-height:1.9}}
+body{{margin:0;background:var(--paper);color:var(--ink);font-family:{SERIF_STACK};line-height:1.9}}
 .wrap{{max-width:860px;margin:0 auto;padding:0 26px}}
 html{{-webkit-text-size-adjust:100%}}
 a:focus-visible{{outline:2px solid var(--seal);outline-offset:4px}}
@@ -670,6 +828,22 @@ def upgrade_static_pages(books: list) -> None:
             desc="泉森的半亩方塘：一百部书的札记，按国家收拢的照片。",
             ogtype="website", title="泉森 · 半亩方塘", url=f"{SITE}/", image=OG_IMAGE)
         s = s.replace("</head>", og + "</head>", 1)
+    home_schema = {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "半亩方塘",
+        "alternateName": "泉森的阅读与影像",
+        "url": f"{SITE}/",
+        "description": "一百部书的阅读札记，四地的摄影影像。",
+        "inLanguage": "zh-CN",
+        "author": {"@type": "Person", "name": "泉森"},
+        "publisher": {"@type": "Person", "name": "泉森"},
+    }
+    s = add_head_metadata(s, "feed.xml", "home-website", home_schema)
+    s = s.replace(
+        '"Songti SC","Noto Serif CJK SC","Source Han Serif SC","STSong",serif',
+        f"{SERIF_STACK}",
+    )
     idx.write_text(s, encoding="utf-8")
     print(f"  ✓ {rel(idx)}（OG + 期号链接）")
 
@@ -684,6 +858,28 @@ def upgrade_static_pages(books: list) -> None:
             ogtype="website", title="影像档案 · 半亩方塘",
             url=f"{SITE}/photos/", image=OG_IMAGE)
         t = t.replace("</head>", og + "</head>", 1)
+    photo_index_schema = {
+        "@context": "https://schema.org",
+        "@type": "ImageGallery",
+        "name": "影像档案",
+        "url": f"{SITE}/photos/",
+        "description": "泉森的影像档案：按国家收录风光、建筑、街景与物种。",
+        "inLanguage": "zh-CN",
+        "author": {"@type": "Person", "name": "泉森"},
+    }
+    t = add_head_metadata(t, "../feed.xml", "photos-gallery", photo_index_schema)
+    t = t.replace(
+        '"Songti SC","Noto Serif CJK SC","STSong",serif',
+        f"{SERIF_STACK}",
+    )
+    t = t.replace(
+        '"Songti SC","Noto Serif CJK SC","Source Han Serif SC","STSong",serif',
+        f"{SERIF_STACK}",
+    )
+    t = t.replace(
+        '"Songti SC","Noto Serif CJK SC",serif',
+        f"{SERIF_STACK}",
+    )
     ph.write_text(t, encoding="utf-8")
     print(f"  ✓ {rel(ph)}（OG + 相册入口）")
 
@@ -740,7 +936,7 @@ def build_feed(books: list) -> None:
       <description>{html.escape(label)} · {html.escape(b["title"])}｜半亩方塘</description>
     </item>""")
 
-    last_build = datetime.fromtimestamp(newest_ts or datetime.now(timezone.utc).timestamp(), tz=TZ)
+    last_build = datetime.now(TZ)
     body = f"""<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
@@ -768,7 +964,7 @@ def build_404() -> None:
 <style>
 {CSS_TOKENS}
 body{{margin:0;min-height:100vh;display:flex;align-items:center;background:var(--paper);color:var(--ink);
-font-family:"Songti SC","Noto Serif CJK SC",serif;line-height:1.95}}
+font-family:{SERIF_STACK};line-height:1.95}}
 .wrap{{max-width:620px;margin:0 auto;padding:0 26px}}
 h1{{font-size:34px;font-weight:500;margin:0 0 16px}}
 p{{color:var(--ink-2);font-size:15px;margin:0 0 30px}}
@@ -801,12 +997,22 @@ def build_about_stub() -> None:
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>关于 · 半亩方塘</title>
 {OG_BLOCK.format(desc="关于半亩方塘，以及写这些字、拍这些照片的人。", ogtype="website",
                 title="关于 · 半亩方塘", url=f"{SITE}/about/", image=OG_IMAGE)}
+<link rel="alternate" type="application/rss+xml" title="半亩方塘 · 重温百部名著" href="../feed.xml">
+{schema_tag("about-person", {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "泉森",
+    "url": f"{SITE}/about/",
+    "description": "半亩方塘的作者与摄影者。",
+    "knowsAbout": ["阅读札记", "摄影"],
+})}
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
 <style>
 {CSS_TOKENS}
-body{{margin:0;background:var(--paper);color:var(--ink);font-family:"Songti SC","Noto Serif CJK SC",serif;line-height:1.95}}
+body{{margin:0;background:var(--paper);color:var(--ink);font-family:{SERIF_STACK};line-height:1.95}}
 .wrap{{max-width:680px;margin:0 auto;padding:0 26px}}
 header{{display:flex;justify-content:space-between;align-items:baseline;padding:34px 0 18px;border-bottom:1px solid var(--line)}}
 .mark{{font-size:20px;letter-spacing:.3em;color:var(--seal)}}

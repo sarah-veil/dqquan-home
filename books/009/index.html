@@ -5,7 +5,7 @@
 <style>
 :root{--paper:#f7f4ed;--ink:#201f1b;--ink-2:#5f5b53;--ink-3:#6f685f;--line:#d7d0c2;--line-dark:#b9b0a1;--seal:#9b3227}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);
-font-family:"Songti SC","Noto Serif CJK SC","STSong",serif;line-height:2.05}
+font-family:"Songti SC","Noto Serif CJK SC","Source Han Serif SC","Noto Serif SC","STSong",serif;line-height:2.05}
 a{color:inherit}.wrap{max-width:680px;margin:0 auto;padding:0 26px}
 header{display:flex;justify-content:space-between;align-items:baseline;padding:30px 0 16px;border-bottom:1px solid var(--line)}
 header a{font-size:12px;letter-spacing:.2em;text-decoration:none;color:var(--ink-2)}
@@ -20,12 +20,13 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line)}
     padding-top:20px;border-top:1px solid var(--line);letter-spacing:.01em}
   article p.aside{margin:30px 0;padding:19px 22px;border-left:2px solid var(--seal);
     background:rgba(155,50,39,.045);color:var(--ink);font-size:18px!important;line-height:1.8}
-  .article-toc{margin:0 0 34px;padding:18px 0 20px;border-top:1px solid var(--line);
+  .article-toc{margin:0 0 34px;padding:14px 0 16px;border-top:1px solid var(--line);
     border-bottom:1px solid var(--line)}
-  .article-toc strong{display:block;margin-bottom:8px;color:var(--ink-3);
+  .article-toc strong{display:block;margin:0 0 6px;color:var(--ink-3);
     font-size:10px;font-weight:400;letter-spacing:.2em}
-  .article-toc a{display:inline-block;margin:3px 18px 3px 0;color:var(--ink-2);
-    font-size:12px;line-height:1.7;text-decoration:none}
+  .article-toc a{display:flex;align-items:center;min-height:40px;padding:6px 0;color:var(--ink-2);
+    font-size:14px;line-height:1.55;text-decoration:none;border-top:1px solid rgba(215,208,194,.62)}
+  .article-toc a.toc-sub{padding-left:18px;font-size:13px;color:var(--ink-3)}
   .article-toc a:hover{color:var(--seal)}
   .book-scene{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:28px;
     align-items:center;margin:58px 0 8px;padding:26px 0;border-top:1px solid var(--line-dark);
@@ -46,7 +47,8 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line)}
   @media (max-width:640px){
     article h2.section{font-size:21px;margin-top:42px}
     article p.aside{font-size:17px!important;padding:16px 18px}
-    .article-toc a{display:block;margin-right:0}
+    .article-toc a{min-height:44px;padding-top:8px;padding-bottom:8px}
+    .article-toc a.toc-sub{padding-left:16px}
     .book-scene{grid-template-columns:1fr;gap:18px}
     .book-scene img{aspect-ratio:5/4}
     .pager{flex-direction:column;gap:14px}.pager .next{margin-left:0;text-align:left}
@@ -72,6 +74,8 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line)}
 <meta property="og:locale" content="zh_CN">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://dqquan.com/books/009/">
+<link rel="alternate" type="application/rss+xml" title="半亩方塘 · 重温百部名著" href="../../feed.xml">
+<script type="application/ld+json" data-schema="book-article">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"第 9 期 · 我们仨","description":"第 9 期 · 重温百部名著","url":"https://dqquan.com/books/009/","mainEntityOfPage":"https://dqquan.com/books/009/","inLanguage":"zh-CN","author":{"@type":"Person","name":"泉森"},"publisher":{"@type":"Person","name":"泉森"},"about":{"@id":"https://dqquan.com/books/009/#book"}},{"@type":"Book","@id":"https://dqquan.com/books/009/#book","name":"我们仨","author":{"@type":"Person","name":"杨绛"}}]}</script>
 </head><body><div class="wrap">
 <header><a class="mark" href="../../index.html">半亩方塘</a><nav aria-label="主导航"><a href="../../books/index.html" aria-current="page">阅读</a><a href="../../photos/index.html">影像</a><a href="../../about/index.html">关于</a></nav></header>
 <h1>我们仨</h1>

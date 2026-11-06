@@ -5,7 +5,7 @@
 <style>
 :root{--paper:#f7f4ed;--ink:#201f1b;--ink-2:#5f5b53;--ink-3:#6f685f;--line:#d7d0c2;--line-dark:#b9b0a1;--seal:#9b3227}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);
-font-family:"Songti SC","Noto Serif CJK SC","STSong",serif;line-height:2.05}
+font-family:"Songti SC","Noto Serif CJK SC","Source Han Serif SC","Noto Serif SC","STSong",serif;line-height:2.05}
 a{color:inherit}.wrap{max-width:680px;margin:0 auto;padding:0 26px}
 header{display:flex;justify-content:space-between;align-items:baseline;padding:30px 0 16px;border-bottom:1px solid var(--line)}
 header a{font-size:12px;letter-spacing:.2em;text-decoration:none;color:var(--ink-2)}
@@ -20,12 +20,13 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line)}
     padding-top:20px;border-top:1px solid var(--line);letter-spacing:.01em}
   article p.aside{margin:30px 0;padding:19px 22px;border-left:2px solid var(--seal);
     background:rgba(155,50,39,.045);color:var(--ink);font-size:18px!important;line-height:1.8}
-  .article-toc{margin:0 0 34px;padding:18px 0 20px;border-top:1px solid var(--line);
+  .article-toc{margin:0 0 34px;padding:14px 0 16px;border-top:1px solid var(--line);
     border-bottom:1px solid var(--line)}
-  .article-toc strong{display:block;margin-bottom:8px;color:var(--ink-3);
+  .article-toc strong{display:block;margin:0 0 6px;color:var(--ink-3);
     font-size:10px;font-weight:400;letter-spacing:.2em}
-  .article-toc a{display:inline-block;margin:3px 18px 3px 0;color:var(--ink-2);
-    font-size:12px;line-height:1.7;text-decoration:none}
+  .article-toc a{display:flex;align-items:center;min-height:40px;padding:6px 0;color:var(--ink-2);
+    font-size:14px;line-height:1.55;text-decoration:none;border-top:1px solid rgba(215,208,194,.62)}
+  .article-toc a.toc-sub{padding-left:18px;font-size:13px;color:var(--ink-3)}
   .article-toc a:hover{color:var(--seal)}
   .book-scene{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:28px;
     align-items:center;margin:58px 0 8px;padding:26px 0;border-top:1px solid var(--line-dark);
@@ -46,7 +47,8 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line)}
   @media (max-width:640px){
     article h2.section{font-size:21px;margin-top:42px}
     article p.aside{font-size:17px!important;padding:16px 18px}
-    .article-toc a{display:block;margin-right:0}
+    .article-toc a{min-height:44px;padding-top:8px;padding-bottom:8px}
+    .article-toc a.toc-sub{padding-left:16px}
     .book-scene{grid-template-columns:1fr;gap:18px}
     .book-scene img{aspect-ratio:5/4}
     .pager{flex-direction:column;gap:14px}.pager .next{margin-left:0;text-align:left}
@@ -72,6 +74,8 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line)}
 <meta property="og:locale" content="zh_CN">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://dqquan.com/books/020/">
+<link rel="alternate" type="application/rss+xml" title="半亩方塘 · 重温百部名著" href="../../feed.xml">
+<script type="application/ld+json" data-schema="book-article">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"第 20 期 · 沉思录","description":"第 20 期 · 重温百部名著","url":"https://dqquan.com/books/020/","mainEntityOfPage":"https://dqquan.com/books/020/","inLanguage":"zh-CN","author":{"@type":"Person","name":"泉森"},"publisher":{"@type":"Person","name":"泉森"},"about":{"@id":"https://dqquan.com/books/020/#book"}},{"@type":"Book","@id":"https://dqquan.com/books/020/#book","name":"沉思录","author":{"@type":"Person","name":"马可·奥勒留"}}]}</script>
 </head><body><div class="wrap">
 <header><a class="mark" href="../../index.html">半亩方塘</a><nav aria-label="主导航"><a href="../../books/index.html" aria-current="page">阅读</a><a href="../../photos/index.html">影像</a><a href="../../about/index.html">关于</a></nav></header>
 <h1>沉思录</h1>
@@ -80,7 +84,7 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line)}
 &gt; 记法：全书第一句。后面那么长一张感谢名单，起头就是这短短一句。</p><p>&gt; “从我的母亲，我濡染了虔诚、仁爱和不仅戒除恶行，甚而戒除恶念的品质，以及远离奢侈的简朴生活方式。”（卷一）
 &gt; 记法：写母亲这一句，他连“念头”都算进去了——戒掉一件事容易，戒掉一个念头难。</p><p>&gt; “我为我有好的祖辈、好的父母、好的姐妹、好的教师、好的同伴、好的亲朋和几乎好的一切而感谢神明。”（卷一）
 &gt; 记法：这一卷最后一段的头一句。他数了一整卷“我从谁那里学到了什么”，最后落回一句感谢。</p><h2 class="section" id="sec-6">一个书外的小注</h2><p>这本书原文是古希腊文，中文读者读到的都是译本，同一句话在不同译本里长得不一样。我这次引的是何怀宏的译文（湖南人民出版社，2025 年 4 月版，ISBN 9787556138050）；梁实秋的译本则从海恩斯的英文本来。同一句希腊文，落到中文里就成了两个样子。这本书的卷一末尾还附有注释。</p><h2 class="section" id="sec-7">读的时候，可以留意的三处</h2><p>一、留意“我”什么时候变成“你”。开头那一段他在交代来历，往后全是叮嘱，好像换了一个人在跟他说话；有时候一句话里两个称呼都在。</p><p>二、留意重复。同一个意思出现好几遍，而且常常隔得很远；比一比哪一次下手更重，哪一次只轻轻带过。</p><p>三、留意他写死的次数。他不躲这个话题，也不拿它吓自己；他写死，是为了把眼前这一天写清楚。</p><h2 class="section" id="sec-8">为什么挑它</h2><p>上一期《一句顶一万句》里的人，一辈子都在找一个说得着的人；这一期换一个人，他谁也不找，他跟自己说。上一本讲的是找不到人说话，这一本讲的是学会一个人说话。一样是难处，两处出口：一处是别人，一处是自己。</p><h2 class="section" id="sec-9">还能接着读什么</h2><p>一是《蒙田随笔》，蒙田：也是关起门来写自己，写一段停一停，前后对不上也不改。</p><p>二是《苏格拉底的申辩》，柏拉图：苏格拉底在法庭上说的那番话，是这本书背后的哲学。</p><p>建议先读《苏格拉底的申辩》，篇幅短，一个晚上就能读完。</p><p>下一期，《基督山伯爵》。 这一本是一个皇帝独自对着自己写话；下一期换到法国，看一个人出黑牢，把日子算回来。一本是把自己劝住，一本是不肯放下。</p><p>一百部书，一百个夜晚。不急，也不必急。</p><p>哪一本书曾让你停下来想过一会儿？留言说给我听，我一条条看。</p><aside class="book-scene" aria-label="书边影像">
-  <a href="../../photos/norway-2015/"><img src="../../img/countries/norway-02.jpg" alt="临水而立的旧木屋" loading="lazy" decoding="async"></a>
+  <a href="../../photos/norway-2015/"><img src="../../img/countries/norway-02.jpg" alt="临水而立的旧木屋" width="800" height="1000" loading="lazy" decoding="async"></a>
   <div>
     <p class="scene-label">书边影像 · 2015 · Norway</p>
     <blockquote>临水而立的旧木屋</blockquote>

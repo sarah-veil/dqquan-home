@@ -5,7 +5,7 @@
 <style>
 :root{--paper:#f7f4ed;--ink:#201f1b;--ink-2:#5f5b53;--ink-3:#6f685f;--line:#d7d0c2;--line-dark:#b9b0a1;--seal:#9b3227}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);
-font-family:"Songti SC","Noto Serif CJK SC","STSong",serif;line-height:2.05}
+font-family:"Songti SC","Noto Serif CJK SC","Source Han Serif SC","Noto Serif SC","STSong",serif;line-height:2.05}
 a{color:inherit}.wrap{max-width:680px;margin:0 auto;padding:0 26px}
 header{display:flex;justify-content:space-between;align-items:baseline;padding:30px 0 16px;border-bottom:1px solid var(--line)}
 header a{font-size:12px;letter-spacing:.2em;text-decoration:none;color:var(--ink-2)}
@@ -20,12 +20,13 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line)}
     padding-top:20px;border-top:1px solid var(--line);letter-spacing:.01em}
   article p.aside{margin:30px 0;padding:19px 22px;border-left:2px solid var(--seal);
     background:rgba(155,50,39,.045);color:var(--ink);font-size:18px!important;line-height:1.8}
-  .article-toc{margin:0 0 34px;padding:18px 0 20px;border-top:1px solid var(--line);
+  .article-toc{margin:0 0 34px;padding:14px 0 16px;border-top:1px solid var(--line);
     border-bottom:1px solid var(--line)}
-  .article-toc strong{display:block;margin-bottom:8px;color:var(--ink-3);
+  .article-toc strong{display:block;margin:0 0 6px;color:var(--ink-3);
     font-size:10px;font-weight:400;letter-spacing:.2em}
-  .article-toc a{display:inline-block;margin:3px 18px 3px 0;color:var(--ink-2);
-    font-size:12px;line-height:1.7;text-decoration:none}
+  .article-toc a{display:flex;align-items:center;min-height:40px;padding:6px 0;color:var(--ink-2);
+    font-size:14px;line-height:1.55;text-decoration:none;border-top:1px solid rgba(215,208,194,.62)}
+  .article-toc a.toc-sub{padding-left:18px;font-size:13px;color:var(--ink-3)}
   .article-toc a:hover{color:var(--seal)}
   .book-scene{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:28px;
     align-items:center;margin:58px 0 8px;padding:26px 0;border-top:1px solid var(--line-dark);
@@ -46,7 +47,8 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line)}
   @media (max-width:640px){
     article h2.section{font-size:21px;margin-top:42px}
     article p.aside{font-size:17px!important;padding:16px 18px}
-    .article-toc a{display:block;margin-right:0}
+    .article-toc a{min-height:44px;padding-top:8px;padding-bottom:8px}
+    .article-toc a.toc-sub{padding-left:16px}
     .book-scene{grid-template-columns:1fr;gap:18px}
     .book-scene img{aspect-ratio:5/4}
     .pager{flex-direction:column;gap:14px}.pager .next{margin-left:0;text-align:left}
@@ -72,6 +74,8 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line)}
 <meta property="og:locale" content="zh_CN">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://dqquan.com/books/018/">
+<link rel="alternate" type="application/rss+xml" title="半亩方塘 · 重温百部名著" href="../../feed.xml">
+<script type="application/ld+json" data-schema="book-article">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"第 18 期 · 我，机器人","description":"第 18 期 · 重温百部名著","url":"https://dqquan.com/books/018/","mainEntityOfPage":"https://dqquan.com/books/018/","inLanguage":"zh-CN","author":{"@type":"Person","name":"泉森"},"publisher":{"@type":"Person","name":"泉森"},"about":{"@id":"https://dqquan.com/books/018/#book"}},{"@type":"Book","@id":"https://dqquan.com/books/018/#book","name":"我，机器人","author":{"@type":"Person","name":"艾萨克·阿西莫夫"}}]}</script>
 </head><body><div class="wrap">
 <header><a class="mark" href="../../index.html">半亩方塘</a><nav aria-label="主导航"><a href="../../books/index.html" aria-current="page">阅读</a><a href="../../photos/index.html">影像</a><a href="../../about/index.html">关于</a></nav></header>
 <h1>我，机器人</h1>
@@ -80,7 +84,7 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line)}
 &gt; 记法：全书第一页的三条铁规。读后面几篇的时候，拿它对一对，看每条是怎么被绕开的。</p><p>&gt; “可是您没有跟它们一道工作过，因而您不了解它们。它们比我们更纯洁，更好。”（《引言》）
 &gt; 记法：说这话的是机器人心理学家卡尔文。阿西莫夫最早写的一批机器人故事里，最好的评语就给了机器。</p><p>&gt; “我怕帮不了你们这个忙。”（《证据》）
 &gt; 记法：市长候选人拜厄利被要求当众吃一顿饭，以证明自己是人。他拒绝了——他没法证明自己是人，只能由别人去证明他是机器。</p><h2 class="section" id="sec-6">一个书外的小注</h2><p>阿西莫夫是俄裔美国人，1920年生，1992年去世。这一组故事不是一次写成的，最早一篇《罗比》1940年登在杂志上，1950年才收成一个集子。那三条定律后来被科幻作者和做机器人伦理的人反复引用。有意思的是，他写机器人的初衷跟那一代科幻作者相反：别人写机器人造反，他专写机器人听话；听话的机器照样能把局面搅乱。</p><h2 class="section" id="sec-7">读的时候，可以留意的三处</h2><p>一、留意是谁造了你这个问题。库蒂不认这个来历，奎因拿它做把柄。全书最不肯松口的疑问就这一个。</p><p>二、留意卡尔文。这些故事里，她从二十岁听到第一场报告，一直讲到退休。她是这本书里唯一贯穿始终的人。</p><p>三、留意说谎这件事。会读心的机器人说谎，是为了不伤人；被指控是机器人的人打人，是为了证明自己不是。真假和善恶，在这本书里常常是拧着的。</p><h2 class="section" id="sec-8">为什么挑它</h2><p>上一期《子夜》讲一个人拗不过一张行情；这一期换一批不会累、不会算错的机器上场。两本书问的是同一件事：人给自己立的规矩，真到了具体处境里，够不够用。《子夜》说不够用，这一本也说不够用——只不过这一本用的是机器人的手。</p><h2 class="section" id="sec-9">还能接着读什么</h2><p>一是《机器人大全》，阿西莫夫：这一本之外，还有不少机器人故事收在里面，卡尔文也在里头。</p><p>二是《仿生人会梦见电子羊吗？》，迪克：同样在问人怎么证明自己是人，它比这本书更凉。</p><p>建议先读《机器人大全》，同一支笔，读起来接得上。</p><p>下一期，《一句顶一万句》。 《我，机器人》里，人和机器隔着三条定律，谁也说不透一句话；下一期落到河南延津，看一群人怎么用一句话找另一句话。</p><p>一百部书，一百个夜晚。不急，也不必急。</p><p>哪一本书曾让你停下来想过一会儿？留言说给我听，我一条条看。</p><aside class="book-scene" aria-label="书边影像">
-  <a href="../../photos/kenya-2017/"><img src="../../img/countries/kenya-03.jpg" alt="掠过水面的火烈鸟" loading="lazy" decoding="async"></a>
+  <a href="../../photos/kenya-2017/"><img src="../../img/countries/kenya-03.jpg" alt="掠过水面的火烈鸟" width="800" height="1000" loading="lazy" decoding="async"></a>
   <div>
     <p class="scene-label">书边影像 · 2017 · Kenya</p>
     <blockquote>掠过水面的火烈鸟</blockquote>

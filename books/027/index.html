@@ -5,7 +5,7 @@
 <style>
 :root{--paper:#f7f4ed;--ink:#201f1b;--ink-2:#5f5b53;--ink-3:#6f685f;--line:#d7d0c2;--line-dark:#b9b0a1;--seal:#9b3227}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);
-font-family:"Songti SC","Noto Serif CJK SC","STSong",serif;line-height:2.05}
+font-family:"Songti SC","Noto Serif CJK SC","Source Han Serif SC","Noto Serif SC","STSong",serif;line-height:2.05}
 a{color:inherit}.wrap{max-width:680px;margin:0 auto;padding:0 26px}
 header{display:flex;justify-content:space-between;align-items:baseline;padding:30px 0 16px;border-bottom:1px solid var(--line)}
 header a{font-size:12px;letter-spacing:.2em;text-decoration:none;color:var(--ink-2)}
@@ -20,12 +20,13 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line)}
     padding-top:20px;border-top:1px solid var(--line);letter-spacing:.01em}
   article p.aside{margin:30px 0;padding:19px 22px;border-left:2px solid var(--seal);
     background:rgba(155,50,39,.045);color:var(--ink);font-size:18px!important;line-height:1.8}
-  .article-toc{margin:0 0 34px;padding:18px 0 20px;border-top:1px solid var(--line);
+  .article-toc{margin:0 0 34px;padding:14px 0 16px;border-top:1px solid var(--line);
     border-bottom:1px solid var(--line)}
-  .article-toc strong{display:block;margin-bottom:8px;color:var(--ink-3);
+  .article-toc strong{display:block;margin:0 0 6px;color:var(--ink-3);
     font-size:10px;font-weight:400;letter-spacing:.2em}
-  .article-toc a{display:inline-block;margin:3px 18px 3px 0;color:var(--ink-2);
-    font-size:12px;line-height:1.7;text-decoration:none}
+  .article-toc a{display:flex;align-items:center;min-height:40px;padding:6px 0;color:var(--ink-2);
+    font-size:14px;line-height:1.55;text-decoration:none;border-top:1px solid rgba(215,208,194,.62)}
+  .article-toc a.toc-sub{padding-left:18px;font-size:13px;color:var(--ink-3)}
   .article-toc a:hover{color:var(--seal)}
   .book-scene{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:28px;
     align-items:center;margin:58px 0 8px;padding:26px 0;border-top:1px solid var(--line-dark);
@@ -46,7 +47,8 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line)}
   @media (max-width:640px){
     article h2.section{font-size:21px;margin-top:42px}
     article p.aside{font-size:17px!important;padding:16px 18px}
-    .article-toc a{display:block;margin-right:0}
+    .article-toc a{min-height:44px;padding-top:8px;padding-bottom:8px}
+    .article-toc a.toc-sub{padding-left:16px}
     .book-scene{grid-template-columns:1fr;gap:18px}
     .book-scene img{aspect-ratio:5/4}
     .pager{flex-direction:column;gap:14px}.pager .next{margin-left:0;text-align:left}
@@ -72,6 +74,8 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line)}
 <meta property="og:locale" content="zh_CN">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://dqquan.com/books/027/">
+<link rel="alternate" type="application/rss+xml" title="半亩方塘 · 重温百部名著" href="../../feed.xml">
+<script type="application/ld+json" data-schema="book-article">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"第 27 期 · 西线无战事","description":"第 27 期 · 重温百部名著","url":"https://dqquan.com/books/027/","mainEntityOfPage":"https://dqquan.com/books/027/","inLanguage":"zh-CN","author":{"@type":"Person","name":"泉森"},"publisher":{"@type":"Person","name":"泉森"},"about":{"@id":"https://dqquan.com/books/027/#book"}},{"@type":"Book","@id":"https://dqquan.com/books/027/#book","name":"西线无战事","author":{"@type":"Person","name":"埃里希·玛丽亚·雷马克"}}]}</script>
 </head><body><div class="wrap">
 <header><a class="mark" href="../../index.html">半亩方塘</a><nav aria-label="主导航"><a href="../../books/index.html" aria-current="page">阅读</a><a href="../../photos/index.html">影像</a><a href="../../about/index.html">关于</a></nav></header>
 <h1>西线无战事</h1>
@@ -80,7 +84,7 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line)}
 记法：二十岁的人说“我们已经老了”，不是在抒情，是在报伤情。这一句写在第 1 章，全书刚开头，作者就把结论先给了你。</p><p>「我们不再是青年了，我们不再想征服这个世界。我们是逃兵，逃离了自己，逃离了自己的生活。」
 记法：注意“逃兵”两个字是主角自己认下的，不是别人骂的。他逃的不是前线，是自己的生活。</p><p>「他于一九一八年十月阵亡，那一天，整个前线是如此宁静沉寂，连军团指挥部的报告上都只写了一行字：西线无战事。」
 记法：全篇都是“我”，只有这一段换成了“他”。人称一换，叙述者就从这个人身上抽走了——连他的死，也是别人转述的。</p><h2 class="section" id="sec-7">一个书外的小注</h2><p>本文引文一律出自《西线无战事》，上海译文出版社「译文经典」，2022 年 4 月，ISBN 9787532788859。这本书的中文译本不止一种，同一句话各家措辞略有差异，本文不作“唯一措辞”论，只保证所引文字与该版一致。</p><p>两件事。</p><p>一件关于出版：这本书不是先出书再连载的。它从 1928 年 11 月起先在柏林《福斯报》上连载，1929 年 1 月才出单行本；出书后一年内，在德国就卖出了约一百万册，1929 年内被译成三十多种文字。</p><p>另一件关于作者：雷马克 1898 年 6 月 22 日生于奥斯纳布吕克一个工人家庭，1916 年 11 月被征入伍，那时十八岁；1917 年 7 月在佛兰德身负重伤，此后在后方医院待到停战。战后他做过小学教师，1921 年后在汉诺威、柏林做记者。1933 年 5 月，他的书被当众焚毁；1938 年他被剥夺德国国籍；他先流亡瑞士，后去美国，1947 年入美国籍，1948 年回到欧洲，1970 年 9 月 25 日病逝于瑞士洛迦诺。这本书问世当年——一九二九年——中文世界就有了译本。</p><h2 class="section" id="sec-8">读它的时候，可以留意的三处</h2><p>一，留意他写“吃”和“睡”的次数。双份的面包、偷来的鹅、休假时母亲特意留给他的那一罐糖水蔓越莓——人要先活着，才谈得上别的。</p><p>二，留意人称。整本书都是“我”，只有最后一段变成了“他”。这一转，把最后一点温度也抽走了。</p><p>三，留意他几乎不写“残酷”这两个字。他不形容，只报数：多少人上去，多少人回来。</p><h2 class="section" id="sec-9">为什么挑它</h2><p>因为它不劝人，也不骂谁。它只是把一个人怎么没的，一步一步摆给你看：先把他的从前收走，再把他的以后收走，最后把他这个人收成公文里的一行字。写胜负的战争书很多，写“损失”的很少；这一本写的全是损失。</p><h2 class="section" id="sec-10">还能接着读什么</h2><p>一条线：想知道“从这场战争里活着出来的人会怎样”，可以读海明威的《永别了，武器》。</p><p>另一条线：想知道同一件事在别的地方、别的人身上怎么重演，可以读《这里的黎明静悄悄》和《安妮日记》。</p><h2 class="section" id="sec-11">最后</h2><p>合上书，你会发现雷马克从头到尾没有让任何人认罪。他只是让那些名字一个一个少下去，少到最后一行战报，连名字也没有了。</p><p>下一期，《孩子你慢慢来》。这一期是一群人被战争从时间表上划掉；下一期换到一位母亲，看她怎么陪着一个孩子，一天一天，把时间慢慢走回来。龙应台，写母亲与孩子。</p><aside class="book-scene" aria-label="书边影像">
-  <a href="../../photos/kenya-2017/"><img src="../../img/countries/kenya-02.jpg" alt="草原上的落日" loading="lazy" decoding="async"></a>
+  <a href="../../photos/kenya-2017/"><img src="../../img/countries/kenya-02.jpg" alt="草原上的落日" width="800" height="1000" loading="lazy" decoding="async"></a>
   <div>
     <p class="scene-label">书边影像 · 2017 · Kenya</p>
     <blockquote>草原上的落日</blockquote>
